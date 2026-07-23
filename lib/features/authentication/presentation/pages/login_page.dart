@@ -13,24 +13,31 @@ class LoginPage extends StatelessWidget {
       backgroundColor: const Color(0xFFF3F4F6),
       body: SafeArea(
         top: false,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Stack(
-                alignment: Alignment.topCenter,
+        child: CustomScrollView(
+          physics: const ClampingScrollPhysics(),
+          slivers: [
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Column(
                 children: [
-                  const LoginHeader(),
-                  Padding(
-                    padding: EdgeInsets.only(top: 240.h, left: 24.w, right: 24.w),
-                    child: const LoginCard(),
+                  Stack(
+                    alignment: Alignment.topCenter,
+                    children: [
+                      const LoginHeader(),
+                      Padding(
+                        padding: EdgeInsets.only(top: 240.h, left: 24.w, right: 24.w),
+                        child: const LoginCard(),
+                      ),
+                    ],
                   ),
+                  const Spacer(),
+                  SizedBox(height: 32.h),
+                  const VersionFooter(),
+                  SizedBox(height: 24.h),
                 ],
               ),
-              SizedBox(height: 32.h),
-              const VersionFooter(),
-              SizedBox(height: 24.h),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
