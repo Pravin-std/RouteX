@@ -10,7 +10,6 @@ import 'package:routex/core/utils/snackbar_utils.dart';
 import '../widgets/email_textfield.dart';
 import '../widgets/password_textfield.dart';
 import '../widgets/login_header.dart';
-import '../widgets/login_button.dart';
 
 class SignupPage extends ConsumerStatefulWidget {
   const SignupPage({super.key});
@@ -48,7 +47,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
       try {
         await ref.read(authStateProvider.notifier).register(
               email: _emailController.text.trim(),
-              password: _passwordController.text,
+              password: _passwordController.text.trim(),
               fullName: _nameController.text.trim(),
               phoneNumber: _phoneController.text.trim(),
               gender: _selectedGender,
@@ -144,7 +143,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                                 ),
                                 SizedBox(height: 16.h),
                                 DropdownButtonFormField<String>(
-                                  value: _selectedGender,
+                                  initialValue: _selectedGender,
                                   items: ['Male', 'Female', 'Other']
                                       .map((label) => DropdownMenuItem(
                                             value: label,

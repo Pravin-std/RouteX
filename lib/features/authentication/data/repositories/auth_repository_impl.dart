@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../domain/repositories/auth_repository.dart';
@@ -42,18 +43,18 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<void> signInWithEmail(String email, String password) async {
     try {
-      print('[AuthRepository] Attempting signInWithEmail for: $email');
+      debugPrint('[AuthRepository] Attempting signInWithEmail for: $email');
       final response = await _supabaseClient.auth.signInWithPassword(
         email: email,
         password: password,
       );
-      print('[AuthRepository] signInWithEmail successful. User ID: ${response.user?.id}, Session: ${response.session != null}');
+      debugPrint('[AuthRepository] signInWithEmail successful. User ID: ${response.user?.id}, Session: ${response.session != null}');
     } on supabase.AuthException catch (authError) {
-      print('[AuthRepository] AuthException during signInWithEmail: ${authError.message}');
-      print('[AuthRepository] AuthException status code: ${authError.statusCode}');
+      debugPrint('[AuthRepository] AuthException during signInWithEmail: ${authError.message}');
+      debugPrint('[AuthRepository] AuthException status code: ${authError.statusCode}');
       rethrow;
     } catch (e) {
-      print('[AuthRepository] Unknown error during signInWithEmail: $e');
+      debugPrint('[AuthRepository] Unknown error during signInWithEmail: $e');
       rethrow;
     }
   }
@@ -67,7 +68,7 @@ class AuthRepositoryImpl implements AuthRepository {
     String? gender,
   }) async {
     try {
-      print('[AuthRepository] Starting signUpWithEmail for: $email');
+      debugPrint('[AuthRepository] Starting signUpWithEmail for: $email');
       // 1. Sign up the user
       final authResponse = await _supabaseClient.auth.signUp(
         email: email,
@@ -80,36 +81,16 @@ class AuthRepositoryImpl implements AuthRepository {
       );
 
       final user = authResponse.user;
-      print('[AuthRepository] Auth signUp successful. User ID: ${user?.id}, Session: ${authResponse.session != null}');
+      debugPrint('[AuthRepository] Auth signUp successful. User ID: ${user?.id}, Session: ${authResponse.session != null}');
       
-      if (user != null) {
-        print('[AuthRepository] Attempting to insert profile for user: ${user.id}');
-        // 2. Create the profile record
-        try {
-          await _supabaseClient.from('profiles').insert({
-            'id': user.id,
-            'full_name': fullName,
-            'email': email,
-            'phone_number': phoneNumber,
-            'gender': gender,
-          });
-          print('[AuthRepository] Profile inserted successfully');
-        } on supabase.PostgrestException catch (pgError) {
-          print('[AuthRepository] Profile insertion PostgrestException: ${pgError.message}');
-          // We throw a custom exception or the pgError to bubble up the real error
-          throw Exception('Profile creation failed: ${pgError.message}');
-        } catch (e) {
-          print('[AuthRepository] Profile insertion unknown error: $e');
-          throw Exception('Profile creation failed: $e');
-        }
-      } else {
-        print('[AuthRepository] User is null after signUp');
+      if (user == null) {
+        debugPrint('[AuthRepository] User is null after signUp');
       }
     } on supabase.AuthException catch (authError) {
-      print('[AuthRepository] AuthException during signUp: ${authError.message}');
+      debugPrint('[AuthRepository] AuthException during signUp: ${authError.message}');
       rethrow;
     } catch (e) {
-      print('[AuthRepository] Unknown error during signUp: $e');
+      debugPrint('[AuthRepository] Unknown error during signUp: $e');
       rethrow;
     }
   }
@@ -186,6 +167,37 @@ class AuthRepositoryImpl implements AuthRepository {
       await _supabaseClient.auth.updateUser(
         supabase.UserAttributes(password: newPassword),
       );
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> updateProfile(Map<String, dynamic> updates) async {
+    final user = currentUser;
+    if (user == null) throw Exception('No user logged in');
+    try {
+      await _supabaseClient.from('profiles').update(updates).eq('id', user.id);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<String> uploadProfilePhoto(String fileName, Uint8List fileBytes) async {
+    final user = currentUser;
+    if (user == null) throw Exception('No user logged in');
+    
+    try {
+      final storagePath = '${user.id}/$fileName';
+
+      await _supabaseClient.storage.from('avatars').uploadBinary(
+        storagePath,
+        fileBytes,
+        fileOptions: const supabase.FileOptions(upsert: true),
+      );
+      
+      return _supabaseClient.storage.from('avatars').getPublicUrl(storagePath);
     } catch (e) {
       rethrow;
     }

@@ -34,24 +34,33 @@ class SnackbarUtils {
   static void handleAuthError(BuildContext context, dynamic error) {
     String message = 'An unexpected error occurred';
     
+    // Log the exact error to the console for debugging
+    debugPrint('=== AUTH ERROR ===');
+    debugPrint(error.toString());
     if (error is AuthException) {
-      // Show the exact message returned by Supabase
+      debugPrint('AuthException Message: ${error.message}');
+      debugPrint('AuthException StatusCode: ${error.statusCode}');
+      
+      // Use the exact message from Supabase as the actual reason
       message = error.message;
       
-      // If we receive "Invalid login credentials", append a hint about email confirmation
-      if (message.toLowerCase() == 'invalid login credentials') {
-        message = 'Invalid login credentials. (If correct, please verify your email)';
+      // We don't append generic email verification hint unless it's specifically about email verification
+      if (message.toLowerCase().contains('email not confirmed')) {
+        message = 'Please confirm your email address before logging in.';
+      } else if (message.toLowerCase().contains('invalid login credentials')) {
+        message = 'Invalid email or password.';
       }
     } else if (error is Exception) {
       message = error.toString().replaceFirst('Exception: ', '');
     } else {
       final errorStr = error.toString();
       if (errorStr.toLowerCase().contains('socket') || errorStr.toLowerCase().contains('network')) {
-        message = 'No internet connection';
+        message = 'No internet connection. Please check your network and try again.';
       } else {
         message = errorStr;
       }
     }
+    debugPrint('==================');
 
     showError(context, message);
   }

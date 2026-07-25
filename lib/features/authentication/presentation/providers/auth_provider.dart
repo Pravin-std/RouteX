@@ -17,7 +17,7 @@ final authStateProvider = NotifierProvider<AuthNotifier, AuthState>(() {
 });
 
 class AuthNotifier extends Notifier<AuthState> {
-  StreamSubscription<supabase.AuthState>? _authStateSubscription;
+
 
   AuthService get _authService => ref.read(authServiceProvider);
 
@@ -30,7 +30,7 @@ class AuthNotifier extends Notifier<AuthState> {
   void _init() {
     // We defer listening to avoid modifying state during build if it fires synchronously
     Future.microtask(() {
-      _authStateSubscription = _authService.authStateChanges.listen((data) {
+      _authService.authStateChanges.listen((data) {
         final session = data.session;
         if (session != null) {
           state = state.copyWith(status: AuthStatus.authenticated, errorMessage: null);

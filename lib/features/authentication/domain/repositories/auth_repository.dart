@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 import '../models/user_profile.dart';
 
@@ -25,4 +26,8 @@ abstract class AuthRepository {
   Future<void> sendPasswordResetEmail(String email);
 
   Future<void> updatePassword(String newPassword);
+
+  Future<void> updateProfile(Map<String, dynamic> updates);
+
+  Future<String> uploadProfilePhoto(String fileName, Uint8List fileBytes);
 }

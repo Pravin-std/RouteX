@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:routex/core/theme/app_colors.dart';
 import '../providers/auth_provider.dart';
-import '../providers/auth_state.dart';
 import 'package:routex/core/utils/validators.dart';
 import 'package:routex/core/utils/snackbar_utils.dart';
 import '../widgets/password_textfield.dart';

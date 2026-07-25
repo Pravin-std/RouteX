@@ -7,6 +7,10 @@ import 'core/constants/app_constants.dart';
 import 'core/router/router.dart';
 import 'core/theme/app_theme.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:routex/l10n/app_localizations.dart';
+import 'core/providers/language_provider.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
@@ -14,7 +18,7 @@ void main() async {
   
   await Supabase.initialize(
     url: dotenv.env['SUPABASE_URL']!,
-    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+    publishableKey: dotenv.env['SUPABASE_ANON_KEY']!,
   );
 
   Supabase.instance.client.auth.onAuthStateChange.listen((data) {
@@ -30,11 +34,13 @@ void main() async {
   );
 }
 
-class RouteXApp extends StatelessWidget {
+class RouteXApp extends ConsumerWidget {
   const RouteXApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentLocale = ref.watch(languageProvider);
+    
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
@@ -47,6 +53,17 @@ class RouteXApp extends StatelessWidget {
           themeMode: ThemeMode.system,
           routerConfig: appRouter,
           debugShowCheckedModeBanner: false,
+          locale: currentLocale,
+          localizationsDelegates: [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en'), // English
+            Locale('ta'), // Tamil
+          ],
         );
       },
     );

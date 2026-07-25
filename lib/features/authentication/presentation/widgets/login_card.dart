@@ -38,7 +38,7 @@ class _LoginCardState extends ConsumerState<LoginCard> {
       try {
         await ref.read(authStateProvider.notifier).login(
               _emailController.text.trim(),
-              _passwordController.text,
+              _passwordController.text.trim(),
             );
         if (mounted) {
           context.go('/home'); // Ensure this route is available
