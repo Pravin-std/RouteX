@@ -38,14 +38,19 @@ class UserProfile extends Equatable {
       email: json['email'] as String? ?? '',
       phoneNumber: json['phone_number'] as String? ?? '',
       gender: json['gender'] as String?,
-      profilePhotoUrl: json['avatar_url'] as String? ?? json['profile_photo_url'] as String?,
+      profilePhotoUrl:
+          json['avatar_url'] as String? ?? json['profile_photo_url'] as String?,
       dob: json['dob'] as String?,
       address: json['address'] as String?,
       city: json['city'] as String?,
       state: json['state'] as String?,
       country: json['country'] as String?,
-      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at'] as String) : DateTime.now(),
-      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at'] as String) : DateTime.now(),
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'] as String)
+          : DateTime.now(),
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'] as String)
+          : DateTime.now(),
     );
   }
 
@@ -69,18 +74,18 @@ class UserProfile extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        fullName,
-        email,
-        phoneNumber,
-        gender,
-        profilePhotoUrl,
-        dob,
-        address,
-        city,
-        state,
-        country,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    fullName,
+    email,
+    phoneNumber,
+    gender,
+    profilePhotoUrl,
+    dob,
+    address,
+    city,
+    state,
+    country,
+    createdAt,
+    updatedAt,
+  ];
 }

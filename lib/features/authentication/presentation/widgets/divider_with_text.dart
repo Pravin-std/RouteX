@@ -9,12 +9,7 @@ class DividerWithText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
-          child: Divider(
-            color: AppColors.border,
-            thickness: 1,
-          ),
-        ),
+        Expanded(child: Divider(color: AppColors.border, thickness: 1)),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Text(
@@ -26,12 +21,7 @@ class DividerWithText extends StatelessWidget {
             ),
           ),
         ),
-        Expanded(
-          child: Divider(
-            color: AppColors.border,
-            thickness: 1,
-          ),
-        ),
+        Expanded(child: Divider(color: AppColors.border, thickness: 1)),
       ],
     );
   }

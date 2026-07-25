@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
-import '../../data/repositories/auth_repository_impl.dart';
-import '../../domain/services/auth_service.dart';
+import '../repositories/auth_repository_impl.dart';
+import '../services/auth_service.dart';
 import 'auth_state.dart';
 
 final authServiceProvider = Provider<AuthService>((ref) {
@@ -17,8 +17,6 @@ final authStateProvider = NotifierProvider<AuthNotifier, AuthState>(() {
 });
 
 class AuthNotifier extends Notifier<AuthState> {
-
-
   AuthService get _authService => ref.read(authServiceProvider);
 
   @override
@@ -33,9 +31,15 @@ class AuthNotifier extends Notifier<AuthState> {
       _authService.authStateChanges.listen((data) {
         final session = data.session;
         if (session != null) {
-          state = state.copyWith(status: AuthStatus.authenticated, errorMessage: null);
+          state = state.copyWith(
+            status: AuthStatus.authenticated,
+            errorMessage: null,
+          );
         } else {
-          state = state.copyWith(status: AuthStatus.unauthenticated, errorMessage: null);
+          state = state.copyWith(
+            status: AuthStatus.unauthenticated,
+            errorMessage: null,
+          );
         }
       });
     });
@@ -128,7 +132,10 @@ class AuthNotifier extends Notifier<AuthState> {
     state = state.copyWith(status: AuthStatus.loading, errorMessage: null);
     try {
       await _authService.forgotPassword(email);
-      state = state.copyWith(status: AuthStatus.unauthenticated, errorMessage: null);
+      state = state.copyWith(
+        status: AuthStatus.unauthenticated,
+        errorMessage: null,
+      );
     } catch (e) {
       state = state.copyWith(
         status: AuthStatus.error,

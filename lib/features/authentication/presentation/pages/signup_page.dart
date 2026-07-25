@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:routex/core/theme/app_colors.dart';
-import '../providers/auth_provider.dart';
-import '../providers/auth_state.dart';
+import '../../../../backend/providers/auth_provider.dart';
+import '../../../../backend/providers/auth_state.dart';
 import 'package:routex/core/utils/validators.dart';
 import 'package:routex/core/utils/snackbar_utils.dart';
 import '../widgets/email_textfield.dart';
@@ -41,11 +41,16 @@ class _SignupPageState extends ConsumerState<SignupPage> {
   void _handleSignup() async {
     if (_formKey.currentState?.validate() ?? false) {
       if (!_agreedToTerms) {
-        SnackbarUtils.showError(context, 'You must agree to the Terms & Privacy Policy');
+        SnackbarUtils.showError(
+          context,
+          'You must agree to the Terms & Privacy Policy',
+        );
         return;
       }
       try {
-        await ref.read(authStateProvider.notifier).register(
+        await ref
+            .read(authStateProvider.notifier)
+            .register(
               email: _emailController.text.trim(),
               password: _passwordController.text.trim(),
               fullName: _nameController.text.trim(),
@@ -53,14 +58,17 @@ class _SignupPageState extends ConsumerState<SignupPage> {
               gender: _selectedGender,
             );
         if (mounted) {
-          SnackbarUtils.showSuccess(context, 'Account created successfully! Please sign in.');
+          SnackbarUtils.showSuccess(
+            context,
+            'Account created successfully! Please sign in.',
+          );
           context.pop(); // Go back to login
         }
       } catch (e) {
         if (mounted) {
           SnackbarUtils.handleAuthError(context, e);
-          
-          // If the auth signup succeeded but profile creation failed, we should still 
+
+          // If the auth signup succeeded but profile creation failed, we should still
           // consider the account created and return to login.
           if (e.toString().contains('Profile creation failed')) {
             Future.delayed(const Duration(seconds: 2), () {
@@ -95,7 +103,12 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                     children: [
                       const LoginHeader(), // Reusing the header
                       Padding(
-                        padding: EdgeInsets.only(top: 240.h, left: 24.w, right: 24.w, bottom: 40.h),
+                        padding: EdgeInsets.only(
+                          top: 240.h,
+                          left: 24.w,
+                          right: 24.w,
+                          bottom: 40.h,
+                        ),
                         child: Container(
                           width: double.infinity,
                           padding: EdgeInsets.all(24.w),
@@ -127,7 +140,10 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                                 TextFormField(
                                   controller: _nameController,
                                   validator: Validators.validateName,
-                                  decoration: _inputDecoration('Full Name', Icons.person_outline),
+                                  decoration: _inputDecoration(
+                                    'Full Name',
+                                    Icons.person_outline,
+                                  ),
                                 ),
                                 SizedBox(height: 16.h),
                                 EmailTextfield(
@@ -139,23 +155,31 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                                   controller: _phoneController,
                                   validator: Validators.validatePhone,
                                   keyboardType: TextInputType.phone,
-                                  decoration: _inputDecoration('Phone Number', Icons.phone_outlined),
+                                  decoration: _inputDecoration(
+                                    'Phone Number',
+                                    Icons.phone_outlined,
+                                  ),
                                 ),
                                 SizedBox(height: 16.h),
                                 DropdownButtonFormField<String>(
                                   initialValue: _selectedGender,
                                   items: ['Male', 'Female', 'Other']
-                                      .map((label) => DropdownMenuItem(
-                                            value: label,
-                                            child: Text(label),
-                                          ))
+                                      .map(
+                                        (label) => DropdownMenuItem(
+                                          value: label,
+                                          child: Text(label),
+                                        ),
+                                      )
                                       .toList(),
                                   onChanged: (value) {
                                     setState(() {
                                       _selectedGender = value;
                                     });
                                   },
-                                  decoration: _inputDecoration('Gender (Optional)', Icons.wc_outlined),
+                                  decoration: _inputDecoration(
+                                    'Gender (Optional)',
+                                    Icons.wc_outlined,
+                                  ),
                                 ),
                                 SizedBox(height: 16.h),
                                 PasswordTextfield(
@@ -166,7 +190,11 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                                 SizedBox(height: 16.h),
                                 PasswordTextfield(
                                   controller: _confirmPasswordController,
-                                  validator: (val) => Validators.validateConfirmPassword(val, _passwordController.text),
+                                  validator: (val) =>
+                                      Validators.validateConfirmPassword(
+                                        val,
+                                        _passwordController.text,
+                                      ),
                                   hintText: 'Confirm Password',
                                 ),
                                 SizedBox(height: 16.h),
@@ -184,23 +212,33 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                                     Expanded(
                                       child: Text(
                                         'I agree to Terms & Privacy Policy',
-                                        style: TextStyle(fontSize: 14.sp, color: AppColors.textSecondary),
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          color: AppColors.textSecondary,
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
                                 SizedBox(height: 24.h),
                                 isLoading
-                                    ? const Center(child: CircularProgressIndicator())
+                                    ? const Center(
+                                        child: CircularProgressIndicator(),
+                                      )
                                     : Container(
                                         width: double.infinity,
                                         height: 56.h,
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(16.r),
+                                          borderRadius: BorderRadius.circular(
+                                            16.r,
+                                          ),
                                           gradient: const LinearGradient(
                                             begin: Alignment.topCenter,
                                             end: Alignment.bottomCenter,
-                                            colors: [AppColors.primary, AppColors.primaryDark],
+                                            colors: [
+                                              AppColors.primary,
+                                              AppColors.primaryDark,
+                                            ],
                                           ),
                                         ),
                                         child: ElevatedButton(
@@ -208,26 +246,42 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.transparent,
                                             shadowColor: Colors.transparent,
-                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(16.r),
+                                            ),
                                           ),
                                           child: Text(
                                             'Create Account',
-                                            style: TextStyle(color: Colors.white, fontSize: 16.sp, fontWeight: FontWeight.bold),
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16.sp,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
                                       ),
                                 SizedBox(height: 24.h),
                                 Center(
                                   child: GestureDetector(
-                                    onTap: isLoading ? null : () => context.pop(),
+                                    onTap: isLoading
+                                        ? null
+                                        : () => context.pop(),
                                     child: RichText(
                                       text: TextSpan(
                                         text: 'Already have an account? ',
-                                        style: TextStyle(color: AppColors.textSecondary, fontSize: 14.sp),
+                                        style: TextStyle(
+                                          color: AppColors.textSecondary,
+                                          fontSize: 14.sp,
+                                        ),
                                         children: [
                                           TextSpan(
                                             text: 'Sign In',
-                                            style: TextStyle(color: AppColors.primary, fontSize: 14.sp, fontWeight: FontWeight.bold),
+                                            style: TextStyle(
+                                              color: AppColors.primary,
+                                              fontSize: 14.sp,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ],
                                       ),

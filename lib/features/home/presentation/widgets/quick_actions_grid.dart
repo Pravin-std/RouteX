@@ -39,10 +39,26 @@ class QuickActionsGrid extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildActionCard(Icons.directions_bus, 'Nearby Buses', const Color(0xFF1E4DB7)),
-              _buildActionCard(Icons.confirmation_number, 'My Tickets', const Color(0xFFFF8A00)),
-              _buildActionCard(Icons.favorite, 'Favorite Routes', const Color(0xFF8B5CF6)),
-              _buildActionCard(Icons.history, 'Recent Trips', const Color(0xFF10B981)),
+              _buildActionCard(
+                Icons.directions_bus,
+                'Nearby Buses',
+                const Color(0xFF1E4DB7),
+              ),
+              _buildActionCard(
+                Icons.confirmation_number,
+                'My Tickets',
+                const Color(0xFFFF8A00),
+              ),
+              _buildActionCard(
+                Icons.favorite,
+                'Favorite Routes',
+                const Color(0xFF8B5CF6),
+              ),
+              _buildActionCard(
+                Icons.history,
+                'Recent Trips',
+                const Color(0xFF10B981),
+              ),
             ],
           ),
         ),
@@ -70,10 +86,7 @@ class QuickActionsGrid extends StatelessWidget {
         children: [
           Container(
             padding: EdgeInsets.all(12.w),
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
             child: Icon(icon, color: Colors.white, size: 24.sp),
           ),
           SizedBox(height: 8.h),

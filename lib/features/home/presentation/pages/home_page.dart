@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:routex/l10n/app_localizations.dart';
 import '../../../../core/providers/language_provider.dart';
-import '../../../../features/authentication/presentation/providers/user_profile_provider.dart';
+import '../../../../backend/providers/user_profile_provider.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -32,7 +32,9 @@ class _HomePageState extends ConsumerState<HomePage> {
     if (searchesJson != null) {
       final List<dynamic> decoded = jsonDecode(searchesJson);
       setState(() {
-        _recentSearches = decoded.map((e) => Map<String, String>.from(e)).toList();
+        _recentSearches = decoded
+            .map((e) => Map<String, String>.from(e))
+            .toList();
       });
     }
   }
@@ -42,7 +44,9 @@ class _HomePageState extends ConsumerState<HomePage> {
     setState(() {
       _recentSearches.removeWhere((s) => s['from'] == from && s['to'] == to);
       _recentSearches.insert(0, search);
-      if (_recentSearches.length > 3) _recentSearches.removeLast(); // Keep top 3
+      if (_recentSearches.length > 3) {
+        _recentSearches.removeLast(); // Keep top 3
+      }
     });
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('recent_searches', jsonEncode(_recentSearches));
@@ -63,18 +67,18 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   void _searchBuses(AppLocalizations l10n) {
     if (_fromController.text.isEmpty || _toController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.pleaseEnterBothStops)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(l10n.pleaseEnterBothStops)));
       return;
     }
-    
+
     _saveRecentSearch(_fromController.text, _toController.text);
-    
-    context.push('/available_buses', extra: {
-      'from': _fromController.text,
-      'to': _toController.text,
-    });
+
+    context.push(
+      '/available_buses',
+      extra: {'from': _fromController.text, 'to': _toController.text},
+    );
   }
 
   void _loadRecentSearch(String from, String to) {
@@ -85,7 +89,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Scaffold(
       backgroundColor: const Color(0xFFFAF6F0),
       body: SafeArea(
@@ -119,7 +123,11 @@ class _HomePageState extends ConsumerState<HomePage> {
         children: [
           Row(
             children: [
-              Icon(Icons.directions_bus, color: const Color(0xFFFF9800), size: 24.sp),
+              Icon(
+                Icons.directions_bus,
+                color: const Color(0xFFFF9800),
+                size: 24.sp,
+              ),
               SizedBox(width: 8.w),
               Text(
                 'RouteX',
@@ -144,7 +152,11 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.language, size: 16.sp, color: Colors.grey.shade700),
+                  Icon(
+                    Icons.language,
+                    size: 16.sp,
+                    color: Colors.grey.shade700,
+                  ),
                   SizedBox(width: 6.w),
                   Text(
                     isTamil ? 'English' : 'தமிழ்',
@@ -166,7 +178,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget _buildGreeting(AppLocalizations l10n) {
     final profileState = ref.watch(userProfileProvider);
     String displayName = '';
-    
+
     profileState.when(
       data: (profile) {
         if (profile != null) {
@@ -180,7 +192,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         }
       },
       loading: () {},
-      error: (_, __) {},
+      error: (e, st) {},
     );
 
     return Padding(
@@ -199,10 +211,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           SizedBox(height: 4.h),
           Text(
             l10n.findBusSubtitle,
-            style: TextStyle(
-              fontSize: 15.sp,
-              color: Colors.grey.shade600,
-            ),
+            style: TextStyle(fontSize: 15.sp, color: Colors.grey.shade600),
           ),
         ],
       ),
@@ -285,7 +294,11 @@ class _HomePageState extends ConsumerState<HomePage> {
         controller: controller,
         decoration: InputDecoration(
           hintText: hint,
-          prefixIcon: Icon(Icons.search, color: Colors.grey.shade400, size: 20.sp),
+          prefixIcon: Icon(
+            Icons.search,
+            color: Colors.grey.shade400,
+            size: 20.sp,
+          ),
           border: InputBorder.none,
           hintStyle: TextStyle(
             fontSize: 15.sp,
@@ -319,30 +332,39 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
           SizedBox(height: 12.h),
           if (_recentSearches.isEmpty)
-            Text(l10n.noRecentSearches, style: TextStyle(color: Colors.grey.shade500, fontSize: 13.sp))
+            Text(
+              l10n.noRecentSearches,
+              style: TextStyle(color: Colors.grey.shade500, fontSize: 13.sp),
+            )
           else
-            ..._recentSearches.map((search) => Padding(
-              padding: EdgeInsets.only(bottom: 8.h),
-              child: GestureDetector(
-                onTap: () => _loadRecentSearch(search['from']!, search['to']!),
-                child: Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(24.r),
-                  ),
-                  child: Text(
-                    '${search['from']} → ${search['to']}',
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w500,
-                      color: const Color(0xFF1E293B),
+            ..._recentSearches.map(
+              (search) => Padding(
+                padding: EdgeInsets.only(bottom: 8.h),
+                child: GestureDetector(
+                  onTap: () =>
+                      _loadRecentSearch(search['from']!, search['to']!),
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 12.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(24.r),
+                    ),
+                    child: Text(
+                      '${search['from']} → ${search['to']}',
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFF1E293B),
+                      ),
                     ),
                   ),
                 ),
               ),
-            )),
+            ),
         ],
       ),
     );

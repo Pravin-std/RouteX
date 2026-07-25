@@ -29,10 +29,11 @@ class _BusDetailsPageState extends State<BusDetailsPage> {
           .select('full_name')
           .eq('id', user.id)
           .single();
-      
+
       final String passengerName = profile['full_name'] ?? 'Guest User';
-      final String ticketNumber = 'RX-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
-      
+      final String ticketNumber =
+          'RX-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
+
       final ticketData = {
         'user_id': user.id,
         'ticket_number': ticketNumber,
@@ -41,7 +42,7 @@ class _BusDetailsPageState extends State<BusDetailsPage> {
         'bus_number': widget.bus['busNumber'],
         'fare': widget.bus['fare'],
         'travel_date': DateTime.now().toIso8601String().split('T')[0],
-        'status': 'Valid'
+        'status': 'Valid',
       };
 
       // Try inserting. If table doesn't exist, we will just proceed anyway
@@ -49,7 +50,9 @@ class _BusDetailsPageState extends State<BusDetailsPage> {
       try {
         await Supabase.instance.client.from('tickets').insert(ticketData);
       } catch (dbError) {
-        debugPrint('Warning: Tickets table might not exist or permission denied. $dbError');
+        debugPrint(
+          'Warning: Tickets table might not exist or permission denied. $dbError',
+        );
       }
 
       if (mounted) {
@@ -118,11 +121,17 @@ class _BusDetailsPageState extends State<BusDetailsPage> {
                     children: [
                       Text(
                         'Bus Number: ${widget.bus['busNumber']}',
-                        style: TextStyle(fontSize: 14.sp, color: Colors.grey.shade700),
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.grey.shade700,
+                        ),
                       ),
                       Text(
                         'Operator: SETC',
-                        style: TextStyle(fontSize: 14.sp, color: Colors.grey.shade700),
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.grey.shade700,
+                        ),
                       ),
                     ],
                   ),
@@ -134,7 +143,10 @@ class _BusDetailsPageState extends State<BusDetailsPage> {
                     children: [
                       _buildInfoColumn('Fare', widget.bus['fare'] ?? ''),
                       _buildInfoColumn('ETA', widget.bus['arrivalTime'] ?? ''),
-                      _buildInfoColumn('Journey Time', widget.bus['duration'] ?? ''),
+                      _buildInfoColumn(
+                        'Journey Time',
+                        widget.bus['duration'] ?? '',
+                      ),
                     ],
                   ),
                 ],
@@ -154,12 +166,24 @@ class _BusDetailsPageState extends State<BusDetailsPage> {
                 children: [
                   Text(
                     'Route Map',
-                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   SizedBox(height: 16.h),
-                  _buildStopRow(widget.bus['departureTime'] ?? '', 'Departure Stop', true),
+                  _buildStopRow(
+                    widget.bus['departureTime'] ?? '',
+                    'Departure Stop',
+                    true,
+                  ),
                   _buildStopRow('...', 'Intermediate Stops', false),
-                  _buildStopRow(widget.bus['arrivalTime'] ?? '', 'Destination Stop', true, isLast: true),
+                  _buildStopRow(
+                    widget.bus['arrivalTime'] ?? '',
+                    'Destination Stop',
+                    true,
+                    isLast: true,
+                  ),
                 ],
               ),
             ),
@@ -188,11 +212,22 @@ class _BusDetailsPageState extends State<BusDetailsPage> {
             ),
             elevation: 0,
           ),
-          child: _isBooking 
-              ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+          child: _isBooking
+              ? const SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2,
+                  ),
+                )
               : Text(
                   'Travel Now - Confirm Boarding',
-                  style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: Colors.white),
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
         ),
       ),
@@ -219,7 +254,12 @@ class _BusDetailsPageState extends State<BusDetailsPage> {
     );
   }
 
-  Widget _buildStopRow(String time, String stopName, bool isImportant, {bool isLast = false}) {
+  Widget _buildStopRow(
+    String time,
+    String stopName,
+    bool isImportant, {
+    bool isLast = false,
+  }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -230,7 +270,9 @@ class _BusDetailsPageState extends State<BusDetailsPage> {
             style: TextStyle(
               fontSize: 12.sp,
               fontWeight: isImportant ? FontWeight.bold : FontWeight.normal,
-              color: isImportant ? const Color(0xFF1E293B) : Colors.grey.shade500,
+              color: isImportant
+                  ? const Color(0xFF1E293B)
+                  : Colors.grey.shade500,
             ),
           ),
         ),
@@ -240,16 +282,14 @@ class _BusDetailsPageState extends State<BusDetailsPage> {
               width: 12.w,
               height: 12.w,
               decoration: BoxDecoration(
-                color: isImportant ? const Color(0xFFFF9800) : Colors.grey.shade300,
+                color: isImportant
+                    ? const Color(0xFFFF9800)
+                    : Colors.grey.shade300,
                 shape: BoxShape.circle,
               ),
             ),
             if (!isLast)
-              Container(
-                width: 2.w,
-                height: 30.h,
-                color: Colors.grey.shade300,
-              ),
+              Container(width: 2.w, height: 30.h, color: Colors.grey.shade300),
           ],
         ),
         SizedBox(width: 16.w),
@@ -259,7 +299,9 @@ class _BusDetailsPageState extends State<BusDetailsPage> {
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: isImportant ? FontWeight.bold : FontWeight.normal,
-              color: isImportant ? const Color(0xFF1E293B) : Colors.grey.shade600,
+              color: isImportant
+                  ? const Color(0xFF1E293B)
+                  : Colors.grey.shade600,
             ),
           ),
         ),

@@ -4,11 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:routex/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
-import '../../../authentication/presentation/providers/user_profile_provider.dart';
-import '../../../authentication/presentation/providers/auth_provider.dart';
+import '../../../../backend/providers/user_profile_provider.dart';
+import '../../../../backend/providers/auth_provider.dart';
 import '../widgets/profile_edit_dialog.dart';
 import '../../../../core/utils/snackbar_utils.dart';
-import '../../../authentication/data/repositories/auth_repository_impl.dart';
+import '../../../../backend/repositories/auth_repository_impl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
@@ -24,13 +24,21 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   Future<void> _updateField(String fieldName, String value) async {
     try {
-      await ref.read(userProfileProvider.notifier).updateProfile({fieldName: value});
-      if (mounted) {
-        SnackbarUtils.showSuccess(context, AppLocalizations.of(context)!.profileUpdated);
+      await ref.read(userProfileProvider.notifier).updateProfile({
+        fieldName: value,
+      });
+      if (context.mounted) {
+        SnackbarUtils.showSuccess(
+          context,
+          AppLocalizations.of(context)!.profileUpdated,
+        );
       }
     } catch (e) {
-      if (mounted) {
-        SnackbarUtils.showError(context, AppLocalizations.of(context)!.error + ': $e');
+      if (context.mounted) {
+        SnackbarUtils.showError(
+          context,
+          '${AppLocalizations.of(context)!.error}: $e',
+        );
       }
     }
   }
@@ -53,30 +61,37 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   Future<void> _pickImage(ImageSource source) async {
     final l10n = AppLocalizations.of(context)!;
     try {
-      final XFile? image = await _picker.pickImage(source: source, imageQuality: 70);
+      final XFile? image = await _picker.pickImage(
+        source: source,
+        imageQuality: 70,
+      );
       if (image != null) {
         setState(() => _isUploading = true);
-        
+
         final bytes = await image.readAsBytes();
         final fileName = image.name;
 
         // Instantiate repository or get from provider. We'll instantiate directly for simplicity here
         // as we only need it for upload. Ideally this should go through userProfileProvider.
-        final repo = AuthRepositoryImpl(supabaseClient: Supabase.instance.client);
+        final repo = AuthRepositoryImpl(
+          supabaseClient: Supabase.instance.client,
+        );
         final url = await repo.uploadProfilePhoto(fileName, bytes);
-        
-        await ref.read(userProfileProvider.notifier).updateProfile({'avatar_url': url});
-        
-        if (mounted) {
+
+        await ref.read(userProfileProvider.notifier).updateProfile({
+          'avatar_url': url,
+        });
+
+        if (context.mounted) {
           SnackbarUtils.showSuccess(context, l10n.profileUpdated);
         }
       }
     } catch (e) {
-      if (mounted) {
-        SnackbarUtils.showError(context, l10n.imageUploadError + ': $e');
+      if (context.mounted) {
+        SnackbarUtils.showError(context, '${l10n.imageUploadError}: $e');
       }
     } finally {
-      if (mounted) {
+      if (context.mounted) {
         setState(() => _isUploading = false);
       }
     }
@@ -86,7 +101,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20.r))),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
       builder: (context) => SafeArea(
         child: Wrap(
           children: [
@@ -120,7 +137,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     return Scaffold(
       backgroundColor: const Color(0xFFFAF6F0),
       appBar: AppBar(
-        title: Text(l10n.myProfile, style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold)),
+        title: Text(
+          l10n.myProfile,
+          style: const TextStyle(
+            color: Colors.black87,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
@@ -129,7 +152,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             icon: const Icon(Icons.logout, color: Colors.redAccent),
             onPressed: () async {
               await ref.read(authStateProvider.notifier).logout();
-              if (mounted) {
+              if (context.mounted) {
                 context.go('/login');
               }
             },
@@ -154,11 +177,19 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       CircleAvatar(
                         radius: 60.r,
                         backgroundColor: Colors.grey.shade300,
-                        backgroundImage: profile.profilePhotoUrl != null && profile.profilePhotoUrl!.isNotEmpty
+                        backgroundImage:
+                            profile.profilePhotoUrl != null &&
+                                profile.profilePhotoUrl!.isNotEmpty
                             ? NetworkImage(profile.profilePhotoUrl!)
                             : null,
-                        child: profile.profilePhotoUrl == null || profile.profilePhotoUrl!.isEmpty
-                            ? Icon(Icons.person, size: 60.sp, color: Colors.white)
+                        child:
+                            profile.profilePhotoUrl == null ||
+                                profile.profilePhotoUrl!.isEmpty
+                            ? Icon(
+                                Icons.person,
+                                size: 60.sp,
+                                color: Colors.white,
+                              )
                             : null,
                       ),
                       if (_isUploading)
@@ -168,7 +199,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               color: Colors.black45,
                               shape: BoxShape.circle,
                             ),
-                            child: const Center(child: CircularProgressIndicator(color: Colors.white)),
+                            child: const Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                         ),
                       Positioned(
@@ -182,7 +217,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               color: Color(0xFF1E4DB7),
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(Icons.camera_alt, color: Colors.white, size: 20.sp),
+                            child: Icon(
+                              Icons.camera_alt,
+                              color: Colors.white,
+                              size: 20.sp,
+                            ),
                           ),
                         ),
                       ),
@@ -190,15 +229,61 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   ),
                 ),
                 SizedBox(height: 32.h),
-                _buildProfileItem(l10n.fullName, profile.fullName, 'full_name', l10n),
-                _buildProfileItem(l10n.email, profile.email, '', l10n, isEditable: false),
-                _buildProfileItem(l10n.phoneNumber, profile.phoneNumber, 'phone_number', l10n),
-                _buildProfileItem(l10n.gender, profile.gender ?? l10n.notAdded, 'gender', l10n),
-                _buildProfileItem(l10n.dateOfBirth, profile.dob ?? l10n.notAdded, 'dob', l10n),
-                _buildProfileItem(l10n.address, profile.address ?? l10n.notAdded, 'address', l10n),
-                _buildProfileItem(l10n.city, profile.city ?? l10n.notAdded, 'city', l10n),
-                _buildProfileItem(l10n.state, profile.state ?? l10n.notAdded, 'state', l10n),
-                _buildProfileItem(l10n.country, profile.country ?? l10n.notAdded, 'country', l10n),
+                _buildProfileItem(
+                  l10n.fullName,
+                  profile.fullName,
+                  'full_name',
+                  l10n,
+                ),
+                _buildProfileItem(
+                  l10n.email,
+                  profile.email,
+                  '',
+                  l10n,
+                  isEditable: false,
+                ),
+                _buildProfileItem(
+                  l10n.phoneNumber,
+                  profile.phoneNumber,
+                  'phone_number',
+                  l10n,
+                ),
+                _buildProfileItem(
+                  l10n.gender,
+                  profile.gender ?? l10n.notAdded,
+                  'gender',
+                  l10n,
+                ),
+                _buildProfileItem(
+                  l10n.dateOfBirth,
+                  profile.dob ?? l10n.notAdded,
+                  'dob',
+                  l10n,
+                ),
+                _buildProfileItem(
+                  l10n.address,
+                  profile.address ?? l10n.notAdded,
+                  'address',
+                  l10n,
+                ),
+                _buildProfileItem(
+                  l10n.city,
+                  profile.city ?? l10n.notAdded,
+                  'city',
+                  l10n,
+                ),
+                _buildProfileItem(
+                  l10n.state,
+                  profile.state ?? l10n.notAdded,
+                  'state',
+                  l10n,
+                ),
+                _buildProfileItem(
+                  l10n.country,
+                  profile.country ?? l10n.notAdded,
+                  'country',
+                  l10n,
+                ),
                 SizedBox(height: 40.h),
               ],
             ),
@@ -208,7 +293,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     );
   }
 
-  Widget _buildProfileItem(String title, String value, String fieldName, AppLocalizations l10n, {bool isEditable = true}) {
+  Widget _buildProfileItem(
+    String title,
+    String value,
+    String fieldName,
+    AppLocalizations l10n, {
+    bool isEditable = true,
+  }) {
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       padding: EdgeInsets.all(16.w),
@@ -243,7 +334,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   value.isEmpty ? l10n.notAdded : value,
                   style: TextStyle(
                     fontSize: 16.sp,
-                    color: value.isEmpty || value == l10n.notAdded ? Colors.grey.shade400 : Colors.black87,
+                    color: value.isEmpty || value == l10n.notAdded
+                        ? Colors.grey.shade400
+                        : Colors.black87,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -252,8 +345,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           ),
           if (isEditable)
             IconButton(
-              icon: Icon(Icons.edit_outlined, color: const Color(0xFF1E4DB7), size: 20.sp),
-              onPressed: () => _showEditDialog(title, fieldName, value == l10n.notAdded ? '' : value),
+              icon: Icon(
+                Icons.edit_outlined,
+                color: const Color(0xFF1E4DB7),
+                size: 20.sp,
+              ),
+              onPressed: () => _showEditDialog(
+                title,
+                fieldName,
+                value == l10n.notAdded ? '' : value,
+              ),
             ),
         ],
       ),

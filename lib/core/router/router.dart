@@ -12,18 +12,9 @@ import '../../features/tickets/presentation/pages/digital_ticket_page.dart';
 final appRouter = GoRouter(
   initialLocation: '/',
   routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => const SplashPage(),
-    ),
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => const LoginPage(),
-    ),
-    GoRoute(
-      path: '/signup',
-      builder: (context, state) => const SignupPage(),
-    ),
+    GoRoute(path: '/', builder: (context, state) => const SplashPage()),
+    GoRoute(path: '/login', builder: (context, state) => const LoginPage()),
+    GoRoute(path: '/signup', builder: (context, state) => const SignupPage()),
     GoRoute(
       path: '/forgot_password',
       builder: (context, state) => const ForgotPasswordPage(),
@@ -32,10 +23,7 @@ final appRouter = GoRouter(
       path: '/reset_password',
       builder: (context, state) => const ResetPasswordPage(),
     ),
-    GoRoute(
-      path: '/home',
-      builder: (context, state) => const DashboardPage(),
-    ),
+    GoRoute(path: '/home', builder: (context, state) => const DashboardPage()),
     GoRoute(
       path: '/available_buses',
       builder: (context, state) {

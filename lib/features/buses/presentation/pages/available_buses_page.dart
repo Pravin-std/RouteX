@@ -8,23 +8,19 @@ class AvailableBusesPage extends StatelessWidget {
   final String from;
   final String to;
 
-  const AvailableBusesPage({
-    super.key,
-    required this.from,
-    required this.to,
-  });
+  const AvailableBusesPage({super.key, required this.from, required this.to});
 
   Future<void> _saveRoute(BuildContext context) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final String? favsJson = prefs.getString('favorites');
       List<Map<String, dynamic>> favorites = [];
-      
+
       if (favsJson != null) {
         final List<dynamic> decoded = jsonDecode(favsJson);
         favorites = decoded.map((e) => e as Map<String, dynamic>).toList();
       }
-      
+
       // Check if already exists
       final exists = favorites.any((r) => r['from'] == from && r['to'] == to);
       if (!exists) {
@@ -87,7 +83,10 @@ class AvailableBusesPage extends StatelessWidget {
           children: [
             const Text(
               'Available Buses',
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Text(
               '${buses.length} Buses Found',
@@ -185,7 +184,11 @@ class AvailableBusesPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildTimeWidget(bus['departureTime']!, 'Departure'),
-              Icon(Icons.arrow_forward_rounded, color: Colors.grey.shade400, size: 24.sp),
+              Icon(
+                Icons.arrow_forward_rounded,
+                color: Colors.grey.shade400,
+                size: 24.sp,
+              ),
               _buildTimeWidget(bus['arrivalTime']!, 'Arrival'),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -200,7 +203,10 @@ class AvailableBusesPage extends StatelessWidget {
                   ),
                   Text(
                     bus['duration']!,
-                    style: TextStyle(fontSize: 12.sp, color: Colors.grey.shade500),
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: Colors.grey.shade500,
+                    ),
                   ),
                 ],
               ),
@@ -244,7 +250,10 @@ class AvailableBusesPage extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 12.h),
                     elevation: 0,
                   ),
-                  child: const Text('Travel Now', style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: const Text(
+                    'Travel Now',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ],

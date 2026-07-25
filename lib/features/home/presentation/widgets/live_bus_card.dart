@@ -75,7 +75,11 @@ class LiveBusCard extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.access_time, size: 14.sp, color: Colors.grey.shade600),
+                        Icon(
+                          Icons.access_time,
+                          size: 14.sp,
+                          color: Colors.grey.shade600,
+                        ),
                         SizedBox(width: 4.w),
                         Text(
                           'ETA\n$eta',
@@ -89,7 +93,11 @@ class LiveBusCard extends StatelessWidget {
                     ),
                     Row(
                       children: [
-                        Icon(Icons.person, size: 14.sp, color: const Color(0xFF10B981)),
+                        Icon(
+                          Icons.person,
+                          size: 14.sp,
+                          color: const Color(0xFF10B981),
+                        ),
                         SizedBox(width: 4.w),
                         Text(
                           'Seats Available\n$seats',

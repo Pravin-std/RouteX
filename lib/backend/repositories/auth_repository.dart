@@ -4,9 +4,9 @@ import '../models/user_profile.dart';
 
 abstract class AuthRepository {
   Stream<supabase.AuthState> get authStateChanges;
-  
+
   supabase.User? get currentUser;
-  
+
   Future<UserProfile?> getCurrentUserProfile();
 
   Future<void> signInWithEmail(String email, String password);

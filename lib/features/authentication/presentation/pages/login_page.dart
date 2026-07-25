@@ -25,7 +25,11 @@ class LoginPage extends StatelessWidget {
                     children: [
                       const LoginHeader(),
                       Padding(
-                        padding: EdgeInsets.only(top: 240.h, left: 24.w, right: 24.w),
+                        padding: EdgeInsets.only(
+                          top: 240.h,
+                          left: 24.w,
+                          right: 24.w,
+                        ),
                         child: const LoginCard(),
                       ),
                     ],

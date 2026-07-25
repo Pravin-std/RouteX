@@ -33,7 +33,11 @@ class HomeHeader extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Icon(Icons.directions_bus, color: Colors.white, size: 28.sp),
+                      Icon(
+                        Icons.directions_bus,
+                        color: Colors.white,
+                        size: 28.sp,
+                      ),
                       SizedBox(width: 8.w),
                       Text(
                         'RouteX',
@@ -49,7 +53,11 @@ class HomeHeader extends StatelessWidget {
                     children: [
                       Stack(
                         children: [
-                          Icon(Icons.notifications_none_rounded, color: Colors.white, size: 28.sp),
+                          Icon(
+                            Icons.notifications_none_rounded,
+                            color: Colors.white,
+                            size: 28.sp,
+                          ),
                           Positioned(
                             right: 2,
                             top: 2,
@@ -67,7 +75,9 @@ class HomeHeader extends StatelessWidget {
                       SizedBox(width: 16.w),
                       CircleAvatar(
                         radius: 18.r,
-                        backgroundImage: const NetworkImage('https://i.pravatar.cc/150?img=11'),
+                        backgroundImage: const NetworkImage(
+                          'https://i.pravatar.cc/150?img=11',
+                        ),
                       ),
                     ],
                   ),

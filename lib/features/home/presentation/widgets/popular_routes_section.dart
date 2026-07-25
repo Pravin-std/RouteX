@@ -7,10 +7,30 @@ class PopularRoutesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final routes = [
-      {'from': 'Salem', 'to': 'Erode', 'fare': '₹120', 'gradient': [Color(0xFFFFF3E0), Color(0xFFFFE0B2)]},
-      {'from': 'Salem', 'to': 'Coimbatore', 'fare': '₹180', 'gradient': [Color(0xFFE3F2FD), Color(0xFFBBDEFB)]},
-      {'from': 'Salem', 'to': 'Chennai', 'fare': '₹450', 'gradient': [Color(0xFFF3E5F5), Color(0xFFE1BEE7)]},
-      {'from': 'Salem', 'to': 'Bengaluru', 'fare': '₹650', 'gradient': [Color(0xFFE8F5E9), Color(0xFFC8E6C9)]},
+      {
+        'from': 'Salem',
+        'to': 'Erode',
+        'fare': '₹120',
+        'gradient': [Color(0xFFFFF3E0), Color(0xFFFFE0B2)],
+      },
+      {
+        'from': 'Salem',
+        'to': 'Coimbatore',
+        'fare': '₹180',
+        'gradient': [Color(0xFFE3F2FD), Color(0xFFBBDEFB)],
+      },
+      {
+        'from': 'Salem',
+        'to': 'Chennai',
+        'fare': '₹450',
+        'gradient': [Color(0xFFF3E5F5), Color(0xFFE1BEE7)],
+      },
+      {
+        'from': 'Salem',
+        'to': 'Bengaluru',
+        'fare': '₹650',
+        'gradient': [Color(0xFFE8F5E9), Color(0xFFC8E6C9)],
+      },
     ];
 
     return Column(
@@ -78,7 +98,11 @@ class PopularRoutesSection extends StatelessWidget {
                             ),
                           ),
                           SizedBox(height: 4.h),
-                          Icon(Icons.arrow_forward_rounded, size: 16.sp, color: Colors.grey.shade700),
+                          Icon(
+                            Icons.arrow_forward_rounded,
+                            size: 16.sp,
+                            color: Colors.grey.shade700,
+                          ),
                           SizedBox(height: 4.h),
                           Text(
                             route['to'] as String,

@@ -13,9 +13,9 @@ import 'core/providers/language_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   await dotenv.load(fileName: ".env");
-  
+
   await Supabase.initialize(
     url: dotenv.env['SUPABASE_URL']!,
     publishableKey: dotenv.env['SUPABASE_ANON_KEY']!,
@@ -27,11 +27,7 @@ void main() async {
     }
   });
 
-  runApp(
-    const ProviderScope(
-      child: RouteXApp(),
-    ),
-  );
+  runApp(const ProviderScope(child: RouteXApp()));
 }
 
 class RouteXApp extends ConsumerWidget {
@@ -40,7 +36,7 @@ class RouteXApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentLocale = ref.watch(languageProvider);
-    
+
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,

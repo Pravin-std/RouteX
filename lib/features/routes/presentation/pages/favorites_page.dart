@@ -58,7 +58,10 @@ class _FavoritesPageState extends State<FavoritesPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text('Favorite Routes', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Favorite Routes',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
       ),
       body: _favorites.isEmpty
           ? _buildEmptyState()
@@ -82,7 +85,11 @@ class _FavoritesPageState extends State<FavoritesPage> {
           SizedBox(height: 16.h),
           Text(
             'No favorites yet',
-            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.grey.shade600),
+            style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey.shade600,
+            ),
           ),
           SizedBox(height: 8.h),
           Text(
@@ -126,12 +133,19 @@ class _FavoritesPageState extends State<FavoritesPage> {
               children: [
                 Text(
                   '${route['from']} → ${route['to']}',
-                  style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E293B)),
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF1E293B),
+                  ),
                 ),
                 SizedBox(height: 4.h),
                 Text(
                   'Tap to search this route',
-                  style: TextStyle(fontSize: 12.sp, color: Colors.grey.shade500),
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: Colors.grey.shade500,
+                  ),
                 ),
               ],
             ),

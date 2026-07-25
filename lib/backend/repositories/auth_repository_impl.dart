@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 import 'package:google_sign_in/google_sign_in.dart';
-import '../../domain/repositories/auth_repository.dart';
-import '../../domain/models/user_profile.dart';
+import 'auth_repository.dart';
+import '../models/user_profile.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final supabase.SupabaseClient _supabaseClient;
@@ -11,8 +11,8 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({
     required supabase.SupabaseClient supabaseClient,
     GoogleSignIn? googleSignIn,
-  })  : _supabaseClient = supabaseClient,
-        _googleSignIn = googleSignIn ?? GoogleSignIn();
+  }) : _supabaseClient = supabaseClient,
+       _googleSignIn = googleSignIn ?? GoogleSignIn();
 
   @override
   Stream<supabase.AuthState> get authStateChanges =>
@@ -48,10 +48,16 @@ class AuthRepositoryImpl implements AuthRepository {
         email: email,
         password: password,
       );
-      debugPrint('[AuthRepository] signInWithEmail successful. User ID: ${response.user?.id}, Session: ${response.session != null}');
+      debugPrint(
+        '[AuthRepository] signInWithEmail successful. User ID: ${response.user?.id}, Session: ${response.session != null}',
+      );
     } on supabase.AuthException catch (authError) {
-      debugPrint('[AuthRepository] AuthException during signInWithEmail: ${authError.message}');
-      debugPrint('[AuthRepository] AuthException status code: ${authError.statusCode}');
+      debugPrint(
+        '[AuthRepository] AuthException during signInWithEmail: ${authError.message}',
+      );
+      debugPrint(
+        '[AuthRepository] AuthException status code: ${authError.statusCode}',
+      );
       rethrow;
     } catch (e) {
       debugPrint('[AuthRepository] Unknown error during signInWithEmail: $e');
@@ -81,13 +87,17 @@ class AuthRepositoryImpl implements AuthRepository {
       );
 
       final user = authResponse.user;
-      debugPrint('[AuthRepository] Auth signUp successful. User ID: ${user?.id}, Session: ${authResponse.session != null}');
-      
+      debugPrint(
+        '[AuthRepository] Auth signUp successful. User ID: ${user?.id}, Session: ${authResponse.session != null}',
+      );
+
       if (user == null) {
         debugPrint('[AuthRepository] User is null after signUp');
       }
     } on supabase.AuthException catch (authError) {
-      debugPrint('[AuthRepository] AuthException during signUp: ${authError.message}');
+      debugPrint(
+        '[AuthRepository] AuthException during signUp: ${authError.message}',
+      );
       rethrow;
     } catch (e) {
       debugPrint('[AuthRepository] Unknown error during signUp: $e');
@@ -127,7 +137,7 @@ class AuthRepositoryImpl implements AuthRepository {
             .select('id')
             .eq('id', user.id)
             .maybeSingle();
-            
+
         if (existingProfile == null) {
           await _supabaseClient.from('profiles').insert({
             'id': user.id,
@@ -184,19 +194,24 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<String> uploadProfilePhoto(String fileName, Uint8List fileBytes) async {
+  Future<String> uploadProfilePhoto(
+    String fileName,
+    Uint8List fileBytes,
+  ) async {
     final user = currentUser;
     if (user == null) throw Exception('No user logged in');
-    
+
     try {
       final storagePath = '${user.id}/$fileName';
 
-      await _supabaseClient.storage.from('avatars').uploadBinary(
-        storagePath,
-        fileBytes,
-        fileOptions: const supabase.FileOptions(upsert: true),
-      );
-      
+      await _supabaseClient.storage
+          .from('avatars')
+          .uploadBinary(
+            storagePath,
+            fileBytes,
+            fileOptions: const supabase.FileOptions(upsert: true),
+          );
+
       return _supabaseClient.storage.from('avatars').getPublicUrl(storagePath);
     } catch (e) {
       rethrow;

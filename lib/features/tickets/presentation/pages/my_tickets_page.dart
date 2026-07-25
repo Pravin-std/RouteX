@@ -50,20 +50,23 @@ class _MyTicketsPageState extends State<MyTicketsPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text('My Tickets', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        title: const Text(
+          'My Tickets',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _tickets.isEmpty
-              ? _buildEmptyState()
-              : ListView.builder(
-                  padding: EdgeInsets.all(16.w),
-                  itemCount: _tickets.length,
-                  itemBuilder: (context, index) {
-                    final ticket = _tickets[index];
-                    return _buildTicketCard(ticket);
-                  },
-                ),
+          ? _buildEmptyState()
+          : ListView.builder(
+              padding: EdgeInsets.all(16.w),
+              itemCount: _tickets.length,
+              itemBuilder: (context, index) {
+                final ticket = _tickets[index];
+                return _buildTicketCard(ticket);
+              },
+            ),
     );
   }
 
@@ -72,11 +75,19 @@ class _MyTicketsPageState extends State<MyTicketsPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.confirmation_number_outlined, size: 80.sp, color: Colors.grey.shade300),
+          Icon(
+            Icons.confirmation_number_outlined,
+            size: 80.sp,
+            color: Colors.grey.shade300,
+          ),
           SizedBox(height: 16.h),
           Text(
             'No tickets yet',
-            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: Colors.grey.shade600),
+            style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey.shade600,
+            ),
           ),
           SizedBox(height: 8.h),
           Text(
@@ -124,12 +135,18 @@ class _MyTicketsPageState extends State<MyTicketsPage> {
                 children: [
                   Text(
                     ticket['route'] ?? 'Unknown Route',
-                    style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   SizedBox(height: 4.h),
                   Text(
                     'Date: ${ticket['travel_date'] ?? 'N/A'}',
-                    style: TextStyle(fontSize: 12.sp, color: Colors.grey.shade600),
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: Colors.grey.shade600,
+                    ),
                   ),
                 ],
               ),

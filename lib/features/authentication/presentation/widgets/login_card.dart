@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:routex/core/theme/app_colors.dart';
-import '../providers/auth_provider.dart';
-import '../providers/auth_state.dart';
+import '../../../../backend/providers/auth_provider.dart';
+import '../../../../backend/providers/auth_state.dart';
 import 'package:routex/core/utils/validators.dart';
 import 'package:routex/core/utils/snackbar_utils.dart';
 import 'google_signin_button.dart';
@@ -36,7 +36,9 @@ class _LoginCardState extends ConsumerState<LoginCard> {
   void _handleLogin() async {
     if (_formKey.currentState?.validate() ?? false) {
       try {
-        await ref.read(authStateProvider.notifier).login(
+        await ref
+            .read(authStateProvider.notifier)
+            .login(
               _emailController.text.trim(),
               _passwordController.text.trim(),
             );
@@ -123,9 +125,7 @@ class _LoginCardState extends ConsumerState<LoginCard> {
             SizedBox(height: 8.h),
             isLoading
                 ? const CircularProgressIndicator()
-                : LoginButton(
-                    onPressed: _handleLogin,
-                  ),
+                : LoginButton(onPressed: _handleLogin),
             SizedBox(height: 24.h),
             const SecurityCard(),
             SizedBox(height: 24.h),

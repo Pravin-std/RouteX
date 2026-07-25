@@ -36,16 +36,14 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     return AlertDialog(
       title: Text(widget.title),
       content: TextField(
         controller: _controller,
         decoration: InputDecoration(
           hintText: widget.title,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.r)),
         ),
       ),
       actions: [
@@ -61,7 +59,10 @@ class _ProfileEditDialogState extends State<ProfileEditDialog> {
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF1E4DB7),
           ),
-          child: Text(l10n.saveChanges, style: const TextStyle(color: Colors.white)),
+          child: Text(
+            l10n.saveChanges,
+            style: const TextStyle(color: Colors.white),
+          ),
         ),
       ],
     );

@@ -10,10 +10,12 @@ class DigitalTicketPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ticketNumber = bus['ticket_number'] ?? 'RX-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
+    final ticketNumber =
+        bus['ticket_number'] ??
+        'RX-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
     final passengerName = bus['passenger_name'] ?? 'Guest User';
     final travelDate = bus['travel_date'] ?? 'Today';
-    
+
     return Scaffold(
       backgroundColor: const Color(0xFF1E4DB7), // Blue background
       appBar: AppBar(
@@ -23,7 +25,10 @@ class DigitalTicketPage extends StatelessWidget {
           icon: const Icon(Icons.close, color: Colors.white),
           onPressed: () => context.go('/home'),
         ),
-        title: const Text('Digital Ticket', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Digital Ticket',
+          style: TextStyle(color: Colors.white),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.share, color: Colors.white),
@@ -47,23 +52,37 @@ class DigitalTicketPage extends StatelessWidget {
                   padding: EdgeInsets.all(24.w),
                   decoration: BoxDecoration(
                     color: const Color(0xFFF8FAFC),
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(24.r),
+                    ),
                   ),
                   child: Column(
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Ticket No', style: TextStyle(color: Colors.grey.shade500)),
-                          Text(ticketNumber, style: const TextStyle(fontWeight: FontWeight.bold)),
+                          Text(
+                            'Ticket No',
+                            style: TextStyle(color: Colors.grey.shade500),
+                          ),
+                          Text(
+                            ticketNumber,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ],
                       ),
                       SizedBox(height: 16.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Passenger', style: TextStyle(color: Colors.grey.shade500)),
-                          Text(passengerName, style: const TextStyle(fontWeight: FontWeight.bold)),
+                          Text(
+                            'Passenger',
+                            style: TextStyle(color: Colors.grey.shade500),
+                          ),
+                          Text(
+                            passengerName,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ],
                       ),
                     ],
@@ -138,7 +157,10 @@ class DigitalTicketPage extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _buildDetail('Bus No', bus['bus_number'] ?? bus['busNumber'] ?? ''),
+                          _buildDetail(
+                            'Bus No',
+                            bus['bus_number'] ?? bus['busNumber'] ?? '',
+                          ),
                           _buildDetail('Date', travelDate),
                           _buildDetail('Fare', bus['fare'] ?? ''),
                         ],
@@ -151,7 +173,10 @@ class DigitalTicketPage extends StatelessWidget {
                       ),
                       SizedBox(height: 16.h),
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 8.h,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.green.shade50,
                           borderRadius: BorderRadius.circular(16.r),
@@ -197,9 +222,15 @@ class DigitalTicketPage extends StatelessWidget {
   Widget _buildDetail(String label, String value) {
     return Column(
       children: [
-        Text(label, style: TextStyle(fontSize: 12.sp, color: Colors.grey.shade500)),
+        Text(
+          label,
+          style: TextStyle(fontSize: 12.sp, color: Colors.grey.shade500),
+        ),
         SizedBox(height: 4.h),
-        Text(value, style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold)),
+        Text(
+          value,
+          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+        ),
       ],
     );
   }

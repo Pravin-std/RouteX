@@ -16,10 +16,7 @@ class EmailTextfield extends StatelessWidget {
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
         hintText: 'Email',
-        hintStyle: TextStyle(
-          color: AppColors.textSecondary,
-          fontSize: 14.sp,
-        ),
+        hintStyle: TextStyle(color: AppColors.textSecondary, fontSize: 14.sp),
         prefixIcon: Icon(
           Icons.email_outlined,
           color: AppColors.textPrimary,

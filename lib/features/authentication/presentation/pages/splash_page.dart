@@ -21,7 +21,7 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   void _checkSession() async {
     // Artificial delay for splash screen aesthetic
     await Future.delayed(const Duration(seconds: 2));
-    
+
     final session = Supabase.instance.client.auth.currentSession;
     if (mounted) {
       if (session != null) {

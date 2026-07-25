@@ -10,10 +10,7 @@ class VersionFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       'Version ${AppConstants.appVersion}',
-      style: TextStyle(
-        color: AppColors.textSecondary,
-        fontSize: 12.sp,
-      ),
+      style: TextStyle(color: AppColors.textSecondary, fontSize: 12.sp),
     );
   }
 }

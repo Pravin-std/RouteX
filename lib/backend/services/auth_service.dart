@@ -7,8 +7,9 @@ class AuthService {
 
   AuthService(this._repository);
 
-  Stream<supabase.AuthState> get authStateChanges => _repository.authStateChanges;
-  
+  Stream<supabase.AuthState> get authStateChanges =>
+      _repository.authStateChanges;
+
   supabase.User? get currentUser => _repository.currentUser;
 
   Future<UserProfile?> getCurrentUserProfile() {

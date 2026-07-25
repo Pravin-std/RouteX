@@ -14,10 +14,7 @@ class LoginHeader extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            AppColors.primary,
-            AppColors.primaryDark,
-          ],
+          colors: [AppColors.primary, AppColors.primaryDark],
         ),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(24),
@@ -59,7 +56,11 @@ class LoginHeader extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.directions_bus, color: Colors.white, size: 40.sp),
+                      Icon(
+                        Icons.directions_bus,
+                        color: Colors.white,
+                        size: 40.sp,
+                      ),
                       SizedBox(width: 8.w),
                       RichText(
                         text: TextSpan(
@@ -69,8 +70,14 @@ class LoginHeader extends StatelessWidget {
                             letterSpacing: -1,
                           ),
                           children: const [
-                            TextSpan(text: 'Route', style: TextStyle(color: Colors.white)),
-                            TextSpan(text: 'X', style: TextStyle(color: AppColors.accent)),
+                            TextSpan(
+                              text: 'Route',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            TextSpan(
+                              text: 'X',
+                              style: TextStyle(color: AppColors.accent),
+                            ),
                           ],
                         ),
                       ),
@@ -89,11 +96,23 @@ class LoginHeader extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      _buildFeatureItem(Icons.location_on, AppColors.accent, 'Find'),
+                      _buildFeatureItem(
+                        Icons.location_on,
+                        AppColors.accent,
+                        'Find',
+                      ),
                       _buildDot(),
-                      _buildFeatureItem(Icons.confirmation_num, AppColors.secondary, 'Book'),
+                      _buildFeatureItem(
+                        Icons.confirmation_num,
+                        AppColors.secondary,
+                        'Book',
+                      ),
                       _buildDot(),
-                      _buildFeatureItem(Icons.directions_bus, AppColors.accent, 'Travel'),
+                      _buildFeatureItem(
+                        Icons.directions_bus,
+                        AppColors.accent,
+                        'Travel',
+                      ),
                     ],
                   ),
                   SizedBox(height: 32.h),
@@ -129,7 +148,11 @@ class LoginHeader extends StatelessWidget {
         SizedBox(width: 4.w),
         Text(
           text,
-          style: TextStyle(color: Colors.white, fontSize: 13.sp, fontWeight: FontWeight.w500),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 13.sp,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ],
     );

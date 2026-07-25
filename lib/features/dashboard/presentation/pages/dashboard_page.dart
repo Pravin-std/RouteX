@@ -43,8 +43,14 @@ class _DashboardPageState extends State<DashboardPage> {
           elevation: 0,
           selectedItemColor: const Color(0xFF1E4DB7),
           unselectedItemColor: Colors.grey.shade500,
-          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
+          selectedLabelStyle: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 12,
+          ),
+          unselectedLabelStyle: const TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 12,
+          ),
           currentIndex: _currentIndex,
           onTap: (index) {
             setState(() {

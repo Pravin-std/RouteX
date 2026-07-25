@@ -30,12 +30,7 @@ class _TravelSearchCardState extends State<TravelSearchCard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Tabs
-          Row(
-            children: [
-              _buildTab(0, 'Search Bus'),
-              _buildTab(1, 'Bus Pass'),
-            ],
-          ),
+          Row(children: [_buildTab(0, 'Search Bus'), _buildTab(1, 'Bus Pass')]),
           Padding(
             padding: EdgeInsets.all(20.w),
             child: Column(
@@ -47,9 +42,19 @@ class _TravelSearchCardState extends State<TravelSearchCard> {
                     Expanded(
                       child: Column(
                         children: [
-                          _buildInputBox('From', 'Salem, Tamil Nadu', Icons.location_on, const Color(0xFF1E4DB7)),
+                          _buildInputBox(
+                            'From',
+                            'Salem, Tamil Nadu',
+                            Icons.location_on,
+                            const Color(0xFF1E4DB7),
+                          ),
                           SizedBox(height: 12.h),
-                          _buildInputBox('To', 'Coimbatore, Tamil Nadu', Icons.location_on, const Color(0xFFFF8A00)),
+                          _buildInputBox(
+                            'To',
+                            'Coimbatore, Tamil Nadu',
+                            Icons.location_on,
+                            const Color(0xFFFF8A00),
+                          ),
                         ],
                       ),
                     ),
@@ -64,14 +69,24 @@ class _TravelSearchCardState extends State<TravelSearchCard> {
                             shape: BoxShape.circle,
                             border: Border.all(color: Colors.grey.shade300),
                           ),
-                          child: Icon(Icons.swap_vert, color: Colors.grey.shade600, size: 20.sp),
+                          child: Icon(
+                            Icons.swap_vert,
+                            color: Colors.grey.shade600,
+                            size: 20.sp,
+                          ),
                         ),
                       ],
                     ),
                   ],
                 ),
                 SizedBox(height: 12.h),
-                _buildInputBox('Journey Date', '24 May 2025, Saturday', Icons.calendar_today, Colors.grey.shade600, showDropdown: true),
+                _buildInputBox(
+                  'Journey Date',
+                  '24 May 2025, Saturday',
+                  Icons.calendar_today,
+                  Colors.grey.shade600,
+                  showDropdown: true,
+                ),
                 SizedBox(height: 20.h),
                 // Gradient Search Button
                 Container(
@@ -122,7 +137,9 @@ class _TravelSearchCardState extends State<TravelSearchCard> {
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
-                color: isSelected ? const Color(0xFFFF8A00) : Colors.transparent,
+                color: isSelected
+                    ? const Color(0xFFFF8A00)
+                    : Colors.transparent,
                 width: 3,
               ),
             ),
@@ -133,7 +150,9 @@ class _TravelSearchCardState extends State<TravelSearchCard> {
             style: TextStyle(
               fontSize: 15.sp,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-              color: isSelected ? const Color(0xFF1E293B) : Colors.grey.shade500,
+              color: isSelected
+                  ? const Color(0xFF1E293B)
+                  : Colors.grey.shade500,
             ),
           ),
         ),
@@ -141,7 +160,13 @@ class _TravelSearchCardState extends State<TravelSearchCard> {
     );
   }
 
-  Widget _buildInputBox(String label, String value, IconData icon, Color iconColor, {bool showDropdown = false}) {
+  Widget _buildInputBox(
+    String label,
+    String value,
+    IconData icon,
+    Color iconColor, {
+    bool showDropdown = false,
+  }) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
@@ -159,12 +184,19 @@ class _TravelSearchCardState extends State<TravelSearchCard> {
               children: [
                 Text(
                   label,
-                  style: TextStyle(fontSize: 12.sp, color: Colors.grey.shade500),
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    color: Colors.grey.shade500,
+                  ),
                 ),
                 SizedBox(height: 4.h),
                 Text(
                   value,
-                  style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold, color: const Color(0xFF1E293B)),
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF1E293B),
+                  ),
                 ),
               ],
             ),

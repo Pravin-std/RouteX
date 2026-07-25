@@ -10,15 +10,39 @@ class TodayStatusCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Today\'s Bus Services', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const Text(
+            'Today\'s Bus Services',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 12),
           Row(
             children: [
-              Expanded(child: _buildStatusItem(Icons.directions_bus, '148', 'Buses Running', Colors.blue)),
+              Expanded(
+                child: _buildStatusItem(
+                  Icons.directions_bus,
+                  '148',
+                  'Buses Running',
+                  Colors.blue,
+                ),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: _buildStatusItem(Icons.route, '42', 'Active Routes', Colors.orange)),
+              Expanded(
+                child: _buildStatusItem(
+                  Icons.route,
+                  '42',
+                  'Active Routes',
+                  Colors.orange,
+                ),
+              ),
               const SizedBox(width: 12),
-              Expanded(child: _buildStatusItem(Icons.timer, '5 min', 'Next Departure', Colors.green)),
+              Expanded(
+                child: _buildStatusItem(
+                  Icons.timer,
+                  '5 min',
+                  'Next Departure',
+                  Colors.green,
+                ),
+              ),
             ],
           ),
         ],
@@ -26,7 +50,12 @@ class TodayStatusCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusItem(IconData icon, String value, String label, Color color) {
+  Widget _buildStatusItem(
+    IconData icon,
+    String value,
+    String label,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -37,9 +66,20 @@ class TodayStatusCard extends StatelessWidget {
         children: [
           Icon(icon, color: color),
           const SizedBox(height: 8),
-          Text(value, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color)),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
           const SizedBox(height: 4),
-          Text(label, textAlign: TextAlign.center, style: TextStyle(fontSize: 11, color: Colors.grey.shade700)),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 11, color: Colors.grey.shade700),
+          ),
         ],
       ),
     );

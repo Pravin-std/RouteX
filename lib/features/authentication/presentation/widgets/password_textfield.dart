@@ -29,10 +29,7 @@ class _PasswordTextfieldState extends State<PasswordTextfield> {
       obscureText: _obscureText,
       decoration: InputDecoration(
         hintText: widget.hintText,
-        hintStyle: TextStyle(
-          color: AppColors.textSecondary,
-          fontSize: 14.sp,
-        ),
+        hintStyle: TextStyle(color: AppColors.textSecondary, fontSize: 14.sp),
         prefixIcon: Icon(
           Icons.lock_outline,
           color: AppColors.textPrimary,
@@ -40,7 +37,9 @@ class _PasswordTextfieldState extends State<PasswordTextfield> {
         ),
         suffixIcon: IconButton(
           icon: Icon(
-            _obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+            _obscureText
+                ? Icons.visibility_outlined
+                : Icons.visibility_off_outlined,
             color: AppColors.textPrimary,
             size: 20.sp,
           ),

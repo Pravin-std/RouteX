@@ -45,14 +45,16 @@ class ServiceAlertsSection extends StatelessWidget {
           icon: Icons.star,
           iconColor: const Color(0xFF1E4DB7),
           title: 'Holiday Special',
-          description: 'Additional buses added for weekend. Book your tickets now!',
+          description:
+              'Additional buses added for weekend. Book your tickets now!',
           time: '1d ago',
         ),
         _buildAlertCard(
           icon: Icons.alt_route,
           iconColor: const Color(0xFF10B981),
           title: 'Route Diversion',
-          description: 'Route diversion on Salem - Coimbatore from May 25 to May 27.',
+          description:
+              'Route diversion on Salem - Coimbatore from May 25 to May 27.',
           time: '2d ago',
         ),
       ],

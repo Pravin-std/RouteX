@@ -30,10 +30,7 @@ class SecurityCard extends StatelessWidget {
             SizedBox(height: 2.h),
             Text(
               'We never share your information',
-              style: TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 12.sp,
-              ),
+              style: TextStyle(color: AppColors.textSecondary, fontSize: 12.sp),
             ),
           ],
         ),
