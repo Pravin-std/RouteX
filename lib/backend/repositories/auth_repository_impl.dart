@@ -1,18 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
-import 'package:google_sign_in/google_sign_in.dart';
 import 'auth_repository.dart';
 import '../models/user_profile.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final supabase.SupabaseClient _supabaseClient;
-  final GoogleSignIn _googleSignIn;
 
   AuthRepositoryImpl({
     required supabase.SupabaseClient supabaseClient,
-    GoogleSignIn? googleSignIn,
-  }) : _supabaseClient = supabaseClient,
-       _googleSignIn = googleSignIn ?? GoogleSignIn();
+  }) : _supabaseClient = supabaseClient;
 
   @override
   Stream<supabase.AuthState> get authStateChanges =>
@@ -108,45 +104,10 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<void> signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        // User cancelled the sign in flow
-        return;
-      }
-
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-      final accessToken = googleAuth.accessToken;
-      final idToken = googleAuth.idToken;
-
-      if (accessToken == null || idToken == null) {
-        throw 'No Access Token or ID Token found.';
-      }
-
-      final authResponse = await _supabaseClient.auth.signInWithIdToken(
-        provider: supabase.OAuthProvider.google,
-        idToken: idToken,
-        accessToken: accessToken,
+      await _supabaseClient.auth.signInWithOAuth(
+        supabase.OAuthProvider.google,
+        redirectTo: 'io.supabase.flutter://login-callback',
       );
-
-      final user = authResponse.user;
-      if (user != null) {
-        // Check if profile exists, if not create one
-        final existingProfile = await _supabaseClient
-            .from('profiles')
-            .select('id')
-            .eq('id', user.id)
-            .maybeSingle();
-
-        if (existingProfile == null) {
-          await _supabaseClient.from('profiles').insert({
-            'id': user.id,
-            'full_name': user.userMetadata?['full_name'] ?? 'Google User',
-            'email': user.email ?? '',
-            'profile_photo_url': user.userMetadata?['avatar_url'],
-          });
-        }
-      }
     } catch (e) {
       rethrow;
     }
@@ -155,7 +116,6 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<void> signOut() async {
     try {
-      await _googleSignIn.signOut();
       await _supabaseClient.auth.signOut();
     } catch (e) {
       rethrow;
