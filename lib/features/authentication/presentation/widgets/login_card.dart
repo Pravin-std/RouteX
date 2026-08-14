@@ -12,7 +12,6 @@ import 'divider_with_text.dart';
 import 'email_textfield.dart';
 import 'password_textfield.dart';
 import 'login_button.dart';
-import 'security_card.dart';
 
 class LoginCard extends ConsumerStatefulWidget {
   const LoginCard({super.key});
@@ -73,15 +72,15 @@ class _LoginCardState extends ConsumerState<LoginCard> {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(24.w),
+      padding: EdgeInsets.all(32.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24.r),
+        borderRadius: BorderRadius.circular(32.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 24,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -89,6 +88,42 @@ class _LoginCardState extends ConsumerState<LoginCard> {
         key: _formKey,
         child: Column(
           children: [
+            Center(
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(12.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.person_outline,
+                      color: AppColors.primary,
+                      size: 28.sp,
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  Text(
+                    'Welcome Back 👋',
+                    style: TextStyle(
+                      color: AppColors.textPrimary,
+                      fontSize: 22.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    'Sign in to continue your journey',
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 32.h),
             GoogleSigninButton(
               onPressed: isLoading ? () {} : _handleGoogleLogin,
             ),
@@ -112,6 +147,9 @@ class _LoginCardState extends ConsumerState<LoginCard> {
                     : () {
                         context.push('/forgot_password');
                       },
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 0, vertical: 8.h),
+                ),
                 child: Text(
                   'Forgot Password?',
                   style: TextStyle(
@@ -122,13 +160,11 @@ class _LoginCardState extends ConsumerState<LoginCard> {
                 ),
               ),
             ),
-            SizedBox(height: 8.h),
+            SizedBox(height: 16.h),
             isLoading
                 ? const CircularProgressIndicator()
                 : LoginButton(onPressed: _handleLogin),
-            SizedBox(height: 24.h),
-            const SecurityCard(),
-            SizedBox(height: 24.h),
+            SizedBox(height: 32.h),
             GestureDetector(
               onTap: isLoading
                   ? null
@@ -136,19 +172,28 @@ class _LoginCardState extends ConsumerState<LoginCard> {
                       context.push('/signup');
                     },
               child: RichText(
+                textAlign: TextAlign.center,
                 text: TextSpan(
-                  text: "Don't have an account? ",
+                  text: 'New here? ',
                   style: TextStyle(
                     color: AppColors.textSecondary,
                     fontSize: 14.sp,
                   ),
                   children: [
                     TextSpan(
-                      text: 'Create Account',
+                      text: 'Create an account',
                       style: TextStyle(
                         color: AppColors.primary,
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    TextSpan(
+                      text: '\nto get started',
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 14.sp,
+                        height: 1.5,
                       ),
                     ),
                   ],

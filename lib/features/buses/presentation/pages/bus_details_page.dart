@@ -30,7 +30,7 @@ class _BusDetailsPageState extends State<BusDetailsPage> {
           .eq('id', user.id)
           .single();
 
-      final String passengerName = profile['full_name'] ?? 'Guest User';
+      final String passengerName = profile['full_name'] ?? '';
       final String ticketNumber =
           'RX-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
 
@@ -45,15 +45,7 @@ class _BusDetailsPageState extends State<BusDetailsPage> {
         'status': 'Valid',
       };
 
-      // Try inserting. If table doesn't exist, we will just proceed anyway
-      // to not block the UI if backend schema is missing 'tickets' table.
-      try {
-        await Supabase.instance.client.from('tickets').insert(ticketData);
-      } catch (dbError) {
-        debugPrint(
-          'Warning: Tickets table might not exist or permission denied. $dbError',
-        );
-      }
+      await Supabase.instance.client.from('tickets').insert(ticketData);
 
       if (mounted) {
         setState(() => _isBooking = false);

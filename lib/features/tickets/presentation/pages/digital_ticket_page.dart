@@ -10,11 +10,9 @@ class DigitalTicketPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ticketNumber =
-        bus['ticket_number'] ??
-        'RX-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
-    final passengerName = bus['passenger_name'] ?? 'Guest User';
-    final travelDate = bus['travel_date'] ?? 'Today';
+    final ticketNumber = bus['ticket_number']?.toString() ?? '';
+    final passengerName = bus['passenger_name']?.toString() ?? '';
+    final travelDate = bus['travel_date']?.toString() ?? '';
 
     return Scaffold(
       backgroundColor: const Color(0xFF1E4DB7), // Blue background

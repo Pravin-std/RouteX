@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:routex/core/theme/app_colors.dart';
 import 'package:routex/features/authentication/presentation/widgets/login_header.dart';
 import 'package:routex/features/authentication/presentation/widgets/login_card.dart';
 import 'package:routex/features/authentication/presentation/widgets/version_footer.dart';
@@ -10,40 +11,73 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF3F4F6),
+      backgroundColor: const Color(0xFFFAFAFA),
       body: SafeArea(
-        top: false,
         child: CustomScrollView(
           physics: const ClampingScrollPhysics(),
           slivers: [
             SliverFillRemaining(
               hasScrollBody: false,
-              child: Column(
-                children: [
-                  Stack(
-                    alignment: Alignment.topCenter,
-                    children: [
-                      const LoginHeader(),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: 240.h,
-                          left: 24.w,
-                          right: 24.w,
-                        ),
-                        child: const LoginCard(),
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  SizedBox(height: 32.h),
-                  const VersionFooter(),
-                  SizedBox(height: 24.h),
-                ],
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    SizedBox(height: 16.h),
+                    const LoginHeader(),
+                    SizedBox(height: 32.h),
+                    const LoginCard(),
+                    const Spacer(),
+                    SizedBox(height: 32.h),
+                    _buildBottomBenefits(),
+                    SizedBox(height: 24.h),
+                    const VersionFooter(),
+                    SizedBox(height: 16.h),
+                  ],
+                ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildBottomBenefits() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _buildBenefitItem(Icons.shield_outlined, 'Secure'),
+        _buildDivider(),
+        _buildBenefitItem(Icons.bolt, 'Fast'),
+        _buildDivider(),
+        _buildBenefitItem(Icons.verified_outlined, 'Reliable'),
+      ],
+    );
+  }
+
+  Widget _buildBenefitItem(IconData icon, String text) {
+    return Row(
+      children: [
+        Icon(icon, size: 16.sp, color: AppColors.textSecondary),
+        SizedBox(width: 6.w),
+        Text(
+          text,
+          style: TextStyle(
+            color: AppColors.textSecondary,
+            fontSize: 13.sp,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDivider() {
+    return Container(
+      width: 1,
+      height: 16.h,
+      color: AppColors.border,
     );
   }
 }

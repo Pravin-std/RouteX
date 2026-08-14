@@ -27,15 +27,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
       setState(() {
         _favorites = decoded.map((e) => e as Map<String, dynamic>).toList();
       });
-    } else {
-      // Mock data if empty
-      setState(() {
-        _favorites = [
-          {'from': 'Salem', 'to': 'Coimbatore'},
-          {'from': 'Tiruchengode', 'to': 'Edappadi'},
-        ];
-      });
-      _saveFavorites();
     }
   }
 

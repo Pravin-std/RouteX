@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:routex/l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../backend/providers/user_profile_provider.dart';
 import '../../../../backend/providers/auth_provider.dart';
 import '../widgets/profile_edit_dialog.dart';
+import '../widgets/location_autocomplete_dialog.dart';
 import '../../../../core/utils/snackbar_utils.dart';
+import '../../../../core/utils/location_data.dart';
 import '../../../../backend/repositories/auth_repository_impl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -23,23 +26,22 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   bool _isUploading = false;
 
   Future<void> _updateField(String fieldName, String value) async {
+    final l10n = AppLocalizations.of(context)!;
     try {
       await ref.read(userProfileProvider.notifier).updateProfile({
         fieldName: value,
       });
-      if (context.mounted) {
-        SnackbarUtils.showSuccess(
-          context,
-          AppLocalizations.of(context)!.profileUpdated,
-        );
-      }
+      if (!mounted) return;
+      SnackbarUtils.showSuccess(
+        context,
+        l10n.profileUpdated,
+      );
     } catch (e) {
-      if (context.mounted) {
-        SnackbarUtils.showError(
-          context,
-          '${AppLocalizations.of(context)!.error}: $e',
-        );
-      }
+      if (!mounted) return;
+      SnackbarUtils.showError(
+        context,
+        '${l10n.error}: $e',
+      );
     }
   }
 
@@ -51,6 +53,110 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         initialValue: currentValue,
         onSave: (newValue) {
           if (newValue != currentValue) {
+            _updateField(fieldName, newValue);
+          }
+        },
+      ),
+    );
+  }
+
+  void _showGenderSelectionDialog(String currentValue) {
+    final l10n = AppLocalizations.of(context)!;
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      builder: (context) => SafeArea(
+        child: Wrap(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(16.w),
+              child: Text(
+                l10n.gender,
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            _buildGenderOption('Male', currentValue),
+            _buildGenderOption('Female', currentValue),
+            _buildGenderOption('Other', currentValue),
+            _buildGenderOption('Prefer not to say', currentValue),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGenderOption(String gender, String currentValue) {
+    return ListTile(
+      title: Text(gender),
+      trailing: currentValue == gender ? const Icon(Icons.check, color: Color(0xFF1E4DB7)) : null,
+      onTap: () {
+        Navigator.of(context).pop();
+        if (gender != currentValue) {
+          _updateField('gender', gender);
+        }
+      },
+    );
+  }
+
+  Future<void> _showDatePickerDialog(String? currentDob) async {
+    DateTime initialDate = DateTime.now();
+    final l10n = AppLocalizations.of(context)!;
+    
+    if (currentDob != null && currentDob.isNotEmpty && currentDob != l10n.notAdded) {
+      try {
+        initialDate = DateFormat('dd MMM yyyy').parse(currentDob);
+      } catch (e) {
+        // Fallback to current date
+      }
+    }
+
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Color(0xFF1E4DB7),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      final formattedDate = DateFormat('dd MMM yyyy').format(picked);
+      if (formattedDate != currentDob) {
+        _updateField('dob', formattedDate);
+      }
+    }
+  }
+
+  void _showLocationAutocomplete(
+    String title,
+    String fieldName,
+    String currentValue,
+    List<String> Function(String) getSuggestions,
+  ) {
+    final l10n = AppLocalizations.of(context)!;
+    final initialValue = (currentValue == l10n.notAdded) ? '' : currentValue;
+    
+    showDialog(
+      context: context,
+      builder: (context) => LocationAutocompleteDialog(
+        title: title,
+        initialValue: initialValue,
+        getSuggestions: getSuggestions,
+        onSelected: (newValue) {
+          if (newValue != currentValue && newValue != l10n.notAdded) {
             _updateField(fieldName, newValue);
           }
         },
@@ -71,8 +177,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         final bytes = await image.readAsBytes();
         final fileName = image.name;
 
-        // Instantiate repository or get from provider. We'll instantiate directly for simplicity here
-        // as we only need it for upload. Ideally this should go through userProfileProvider.
         final repo = AuthRepositoryImpl(
           supabaseClient: Supabase.instance.client,
         );
@@ -82,16 +186,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           'avatar_url': url,
         });
 
-        if (context.mounted) {
-          SnackbarUtils.showSuccess(context, l10n.profileUpdated);
-        }
+        if (!mounted) return;
+        SnackbarUtils.showSuccess(context, l10n.profileUpdated);
       }
     } catch (e) {
-      if (context.mounted) {
-        SnackbarUtils.showError(context, '${l10n.imageUploadError}: $e');
-      }
+      if (!mounted) return;
+      SnackbarUtils.showError(context, '${l10n.imageUploadError}: $e');
     } finally {
-      if (context.mounted) {
+      if (mounted) {
         setState(() => _isUploading = false);
       }
     }
@@ -253,36 +355,50 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   profile.gender ?? l10n.notAdded,
                   'gender',
                   l10n,
+                  onTap: () => _showGenderSelectionDialog(profile.gender ?? l10n.notAdded),
                 ),
                 _buildProfileItem(
                   l10n.dateOfBirth,
                   profile.dob ?? l10n.notAdded,
                   'dob',
                   l10n,
-                ),
-                _buildProfileItem(
-                  l10n.address,
-                  profile.address ?? l10n.notAdded,
-                  'address',
-                  l10n,
+                  onTap: () => _showDatePickerDialog(profile.dob),
                 ),
                 _buildProfileItem(
                   l10n.city,
                   profile.city ?? l10n.notAdded,
                   'city',
                   l10n,
+                  onTap: () => _showLocationAutocomplete(
+                    l10n.city,
+                    'city',
+                    profile.city ?? l10n.notAdded,
+                    (q) => LocationData.getCities(q, profile.state),
+                  ),
                 ),
                 _buildProfileItem(
                   l10n.state,
                   profile.state ?? l10n.notAdded,
                   'state',
                   l10n,
+                  onTap: () => _showLocationAutocomplete(
+                    l10n.state,
+                    'state',
+                    profile.state ?? l10n.notAdded,
+                    (q) => LocationData.getStates(q, profile.country),
+                  ),
                 ),
                 _buildProfileItem(
                   l10n.country,
                   profile.country ?? l10n.notAdded,
                   'country',
                   l10n,
+                  onTap: () => _showLocationAutocomplete(
+                    l10n.country,
+                    'country',
+                    profile.country ?? l10n.notAdded,
+                    (q) => LocationData.getCountries(q),
+                  ),
                 ),
                 SizedBox(height: 40.h),
               ],
@@ -299,6 +415,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     String fieldName,
     AppLocalizations l10n, {
     bool isEditable = true,
+    VoidCallback? onTap,
   }) {
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
@@ -350,7 +467,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 color: const Color(0xFF1E4DB7),
                 size: 20.sp,
               ),
-              onPressed: () => _showEditDialog(
+              onPressed: onTap ?? () => _showEditDialog(
                 title,
                 fieldName,
                 value == l10n.notAdded ? '' : value,

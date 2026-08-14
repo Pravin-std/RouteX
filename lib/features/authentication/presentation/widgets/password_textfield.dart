@@ -32,16 +32,16 @@ class _PasswordTextfieldState extends State<PasswordTextfield> {
         hintStyle: TextStyle(color: AppColors.textSecondary, fontSize: 14.sp),
         prefixIcon: Icon(
           Icons.lock_outline,
-          color: AppColors.textPrimary,
-          size: 20.sp,
+          color: AppColors.textSecondary,
+          size: 22.sp,
         ),
         suffixIcon: IconButton(
           icon: Icon(
             _obscureText
                 ? Icons.visibility_outlined
                 : Icons.visibility_off_outlined,
-            color: AppColors.textPrimary,
-            size: 20.sp,
+            color: AppColors.textSecondary,
+            size: 22.sp,
           ),
           onPressed: () {
             setState(() {
@@ -49,23 +49,25 @@ class _PasswordTextfieldState extends State<PasswordTextfield> {
             });
           },
         ),
+        filled: true,
+        fillColor: Colors.white,
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderRadius: BorderRadius.circular(16.r),
+          borderSide: BorderSide(color: AppColors.border.withValues(alpha: 0.5)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(16.r),
           borderSide: const BorderSide(color: AppColors.primary),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(16.r),
           borderSide: const BorderSide(color: Colors.redAccent),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.r),
+          borderRadius: BorderRadius.circular(16.r),
           borderSide: const BorderSide(color: Colors.redAccent),
         ),
-        contentPadding: EdgeInsets.symmetric(vertical: 16.h),
+        contentPadding: EdgeInsets.symmetric(vertical: 18.h),
       ),
     );
   }

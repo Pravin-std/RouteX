@@ -7,166 +7,153 @@ class LoginHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 340.h,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [AppColors.primary, AppColors.primaryDark],
-        ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(24),
-          bottomRight: Radius.circular(24),
-        ),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            left: -60.w,
-            top: 40.h,
-            child: Container(
-              width: 200.w,
-              height: 200.w,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Top Branding Area
+        Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(10.w),
               decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: 0.1),
-              ),
-            ),
-          ),
-          Positioned(
-            right: -40.w,
-            bottom: 40.h,
-            child: Container(
-              width: 150.w,
-              height: 150.w,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.accent,
-              ),
-            ),
-          ),
-          SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: Column(
-                children: [
-                  SizedBox(height: 24.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.directions_bus,
-                        color: Colors.white,
-                        size: 40.sp,
-                      ),
-                      SizedBox(width: 8.w),
-                      RichText(
-                        text: TextSpan(
-                          style: TextStyle(
-                            fontSize: 36.sp,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: -1,
-                          ),
-                          children: const [
-                            TextSpan(
-                              text: 'Route',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            TextSpan(
-                              text: 'X',
-                              style: TextStyle(color: AppColors.accent),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8.h),
-                  Text(
-                    'Smart Bus Management Platform',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildFeatureItem(
-                        Icons.location_on,
-                        AppColors.accent,
-                        'Find',
-                      ),
-                      _buildDot(),
-                      _buildFeatureItem(
-                        Icons.confirmation_num,
-                        AppColors.secondary,
-                        'Book',
-                      ),
-                      _buildDot(),
-                      _buildFeatureItem(
-                        Icons.directions_bus,
-                        AppColors.accent,
-                        'Travel',
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 32.h),
-                  Text(
-                    'Welcome Back 👋',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    'Sign in to continue your journey',
-                    style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.9),
-                      fontSize: 14.sp,
-                    ),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(14.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
                   ),
                 ],
               ),
+              child: Icon(
+                Icons.directions_bus,
+                color: AppColors.primary,
+                size: 26.sp,
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFeatureItem(IconData icon, Color iconColor, String text) {
-    return Row(
-      children: [
-        Icon(icon, color: iconColor, size: 16.sp),
-        SizedBox(width: 4.w),
-        Text(
-          text,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w500,
-          ),
+            SizedBox(width: 14.w),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    style: TextStyle(
+                      fontSize: 24.sp,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: -0.5,
+                      color: AppColors.textPrimary,
+                    ),
+                    children: const [
+                      TextSpan(text: 'Route'),
+                      TextSpan(
+                        text: 'X',
+                        style: TextStyle(color: AppColors.primary),
+                      ),
+                    ],
+                  ),
+                ),
+                Text(
+                  'Smart Bus Management Platform',
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        SizedBox(height: 32.h),
+        // Quick Action Features
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildActionCard(
+                Icons.location_on, 'Routes', const Color(0xFFE3F2FD), Colors.blue),
+            _buildActionCard(Icons.confirmation_num, 'Tickets',
+                const Color(0xFFF3E5F5), Colors.purple),
+            _buildActionCard(Icons.directions_bus, 'Smart',
+                const Color(0xFFE8F5E9), Colors.green),
+          ],
+        ),
+        SizedBox(height: 40.h),
+        // Hero Section
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 4,
+              child: RichText(
+                text: TextSpan(
+                  style: TextStyle(
+                    fontSize: 34.sp,
+                    fontWeight: FontWeight.w900,
+                    height: 1.2,
+                    letterSpacing: -1,
+                    color: AppColors.textPrimary,
+                  ),
+                  children: const [
+                    TextSpan(text: 'Your Journey,\n'),
+                    TextSpan(
+                      text: 'Simplified.',
+                      style: TextStyle(color: AppColors.primary),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: Image.asset(
+                'assets/images/bus_illustration.png',
+                fit: BoxFit.contain,
+              ),
+            ),
+          ],
         ),
       ],
     );
   }
 
-  Widget _buildDot() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8.w),
+  Widget _buildActionCard(
+      IconData icon, String subtitle, Color bgColor, Color iconColor) {
+    return Expanded(
       child: Container(
-        width: 4.w,
-        height: 4.w,
+        margin: EdgeInsets.symmetric(horizontal: 6.w),
+        padding: EdgeInsets.symmetric(vertical: 14.h),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.5),
-          shape: BoxShape.circle,
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.all(10.w),
+              decoration: BoxDecoration(
+                color: bgColor,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: iconColor, size: 20.sp),
+            ),
+            SizedBox(height: 10.h),
+            Text(
+              subtitle,
+              style: TextStyle(
+                color: AppColors.textPrimary,
+                fontSize: 13.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
       ),
     );

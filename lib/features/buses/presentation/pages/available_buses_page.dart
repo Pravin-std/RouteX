@@ -3,12 +3,53 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-class AvailableBusesPage extends StatelessWidget {
+class AvailableBusesPage extends StatefulWidget {
   final String from;
   final String to;
 
   const AvailableBusesPage({super.key, required this.from, required this.to});
+
+  @override
+  State<AvailableBusesPage> createState() => _AvailableBusesPageState();
+}
+
+class _AvailableBusesPageState extends State<AvailableBusesPage> {
+  bool _isLoading = true;
+  String? _errorMessage;
+  List<Map<String, dynamic>> _buses = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchBuses();
+  }
+
+  Future<void> _fetchBuses() async {
+    try {
+      final response = await Supabase.instance.client
+          .from('buses')
+          .select()
+          .ilike('from_city', '%${widget.from}%')
+          .ilike('to_city', '%${widget.to}%');
+          
+      if (mounted) {
+        setState(() {
+          _buses = List<Map<String, dynamic>>.from(response);
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error fetching buses: $e');
+      if (mounted) {
+        setState(() {
+          _errorMessage = 'Unable to load buses. Please try again.';
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   Future<void> _saveRoute(BuildContext context) async {
     try {
@@ -22,9 +63,9 @@ class AvailableBusesPage extends StatelessWidget {
       }
 
       // Check if already exists
-      final exists = favorites.any((r) => r['from'] == from && r['to'] == to);
+      final exists = favorites.any((r) => r['from'] == widget.from && r['to'] == widget.to);
       if (!exists) {
-        favorites.add({'from': from, 'to': to});
+        favorites.add({'from': widget.from, 'to': widget.to});
         await prefs.setString('favorites', jsonEncode(favorites));
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -45,30 +86,6 @@ class AvailableBusesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Dummy Data
-    final buses = [
-      {
-        'busNumber': 'TN 30 AB 1234',
-        'routeName': '$from -> $to (Express)',
-        'departureTime': '10:00 AM',
-        'arrivalTime': '01:30 PM',
-        'duration': '3h 30m',
-        'fare': '₹150',
-        'status': 'On Time',
-        'busType': 'Non-AC Seater',
-      },
-      {
-        'busNumber': 'TN 45 CD 5678',
-        'routeName': '$from -> $to (Deluxe)',
-        'departureTime': '11:15 AM',
-        'arrivalTime': '02:45 PM',
-        'duration': '3h 30m',
-        'fare': '₹200',
-        'status': 'Delayed',
-        'busType': 'AC Seater',
-      },
-    ];
-
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
@@ -88,10 +105,11 @@ class AvailableBusesPage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              '${buses.length} Buses Found',
-              style: TextStyle(color: Colors.grey.shade600, fontSize: 12.sp),
-            ),
+            if (!_isLoading && _errorMessage == null)
+              Text(
+                '${_buses.length} Buses Found',
+                style: TextStyle(color: Colors.grey.shade600, fontSize: 12.sp),
+              ),
           ],
         ),
         actions: [
@@ -105,19 +123,56 @@ class AvailableBusesPage extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView.builder(
-        padding: EdgeInsets.all(16.w),
-        itemCount: buses.length,
-        itemBuilder: (context, index) {
-          final bus = buses[index];
-          return _buildBusCard(context, bus);
-        },
-      ),
+      body: _buildBody(),
     );
   }
 
-  Widget _buildBusCard(BuildContext context, Map<String, String> bus) {
-    final isDelayed = bus['status'] == 'Delayed';
+  Widget _buildBody() {
+    if (_isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(color: Color(0xFF1E4DB7)),
+      );
+    }
+
+    if (_errorMessage != null) {
+      return Center(
+        child: Text(
+          _errorMessage!,
+          style: TextStyle(fontSize: 16.sp, color: Colors.red),
+        ),
+      );
+    }
+
+    if (_buses.isEmpty) {
+      return Center(
+        child: Text(
+          'No buses available for this route.',
+          style: TextStyle(fontSize: 16.sp, color: Colors.grey.shade700),
+        ),
+      );
+    }
+
+    return ListView.builder(
+      padding: EdgeInsets.all(16.w),
+      itemCount: _buses.length,
+      itemBuilder: (context, index) {
+        final bus = _buses[index];
+        return _buildBusCard(context, bus);
+      },
+    );
+  }
+
+  Widget _buildBusCard(BuildContext context, Map<String, dynamic> bus) {
+    // Map database fields safely
+    final String busNumber = bus['bus_number']?.toString() ?? 'N/A';
+    final String routeName = bus['bus_name']?.toString() ?? '${widget.from} -> ${widget.to}';
+    final String status = 'On Time'; // Fallback logic removed, but this isn't in DB schema. We'll default to On Time.
+    final String departureTime = bus['departure_time']?.toString() ?? 'N/A';
+    final String arrivalTime = bus['arrival_time']?.toString() ?? 'N/A';
+    final String fare = bus['fare'] != null ? '₹${bus['fare']}' : 'N/A';
+    final String duration = 'Direct'; // Omitted from schema
+    final String busType = bus['bus_type']?.toString() ?? 'Standard';
+
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       padding: EdgeInsets.all(16.w),
@@ -145,7 +200,7 @@ class AvailableBusesPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Text(
-                  bus['busNumber']!,
+                  busNumber,
                   style: TextStyle(
                     color: const Color(0xFF1E4DB7),
                     fontWeight: FontWeight.bold,
@@ -156,13 +211,13 @@ class AvailableBusesPage extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: isDelayed ? Colors.red.shade50 : Colors.green.shade50,
+                  color: Colors.green.shade50,
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Text(
-                  bus['status']!,
+                  status,
                   style: TextStyle(
-                    color: isDelayed ? Colors.red : Colors.green,
+                    color: Colors.green,
                     fontWeight: FontWeight.bold,
                     fontSize: 12.sp,
                   ),
@@ -172,7 +227,7 @@ class AvailableBusesPage extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
           Text(
-            bus['routeName']!,
+            routeName,
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.bold,
@@ -183,18 +238,18 @@ class AvailableBusesPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildTimeWidget(bus['departureTime']!, 'Departure'),
+              _buildTimeWidget(departureTime, 'Departure'),
               Icon(
                 Icons.arrow_forward_rounded,
                 color: Colors.grey.shade400,
                 size: 24.sp,
               ),
-              _buildTimeWidget(bus['arrivalTime']!, 'Arrival'),
+              _buildTimeWidget(arrivalTime, 'Arrival'),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    bus['fare']!,
+                    fare,
                     style: TextStyle(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.bold,
@@ -202,7 +257,7 @@ class AvailableBusesPage extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    bus['duration']!,
+                    duration,
                     style: TextStyle(
                       fontSize: 12.sp,
                       color: Colors.grey.shade500,
@@ -214,7 +269,7 @@ class AvailableBusesPage extends StatelessWidget {
           ),
           SizedBox(height: 12.h),
           Text(
-            'Type: ${bus['busType']}',
+            'Type: $busType',
             style: TextStyle(fontSize: 12.sp, color: Colors.grey.shade600),
           ),
           SizedBox(height: 16.h),
@@ -239,7 +294,18 @@ class AvailableBusesPage extends StatelessWidget {
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-                    context.push('/bus_details', extra: bus);
+                    // Normalize bus object keys for BusDetailsPage compatibility
+                    final normalizedBus = {
+                      ...bus,
+                      'busNumber': busNumber,
+                      'routeName': routeName,
+                      'departureTime': departureTime,
+                      'arrivalTime': arrivalTime,
+                      'fare': fare,
+                      'duration': duration,
+                      'busType': busType,
+                    };
+                    context.push('/bus_details', extra: normalizedBus);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFFF9800),
