@@ -29,10 +29,10 @@ class _AvailableBusesPageState extends State<AvailableBusesPage> {
   Future<void> _fetchBuses() async {
     try {
       final response = await Supabase.instance.client
-          .from('buses')
+          .from('bus_routes')
           .select()
-          .ilike('from_city', '%${widget.from}%')
-          .ilike('to_city', '%${widget.to}%');
+          .ilike('from_id', '%${widget.from}%')
+          .ilike('to_id', '%${widget.to}%');
           
       if (mounted) {
         setState(() {
@@ -163,15 +163,15 @@ class _AvailableBusesPageState extends State<AvailableBusesPage> {
   }
 
   Widget _buildBusCard(BuildContext context, Map<String, dynamic> bus) {
-    // Map database fields safely
+    // Map database fields safely based on bus_routes schema
     final String busNumber = bus['bus_number']?.toString() ?? 'N/A';
     final String routeName = bus['bus_name']?.toString() ?? '${widget.from} -> ${widget.to}';
-    final String status = 'On Time'; // Fallback logic removed, but this isn't in DB schema. We'll default to On Time.
-    final String departureTime = bus['departure_time']?.toString() ?? 'N/A';
-    final String arrivalTime = bus['arrival_time']?.toString() ?? 'N/A';
-    final String fare = bus['fare'] != null ? '₹${bus['fare']}' : 'N/A';
-    final String duration = 'Direct'; // Omitted from schema
-    final String busType = bus['bus_type']?.toString() ?? 'Standard';
+    final String status = bus['status']?.toString() ?? 'On Time';
+    final String departureTime = bus['departure']?.toString() ?? 'N/A';
+    final String arrivalTime = bus['arrival']?.toString() ?? 'N/A';
+    final String fare = (bus['price'] != null && bus['price'] != 0) ? '₹${bus['price']}' : 'Fare not available';
+    final String duration = bus['duration_minutes'] != null ? '${bus['duration_minutes']} mins' : 'Direct';
+    final String busType = bus['bus_type']?.toString() ?? 'ordinary';
 
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
@@ -251,9 +251,9 @@ class _AvailableBusesPageState extends State<AvailableBusesPage> {
                   Text(
                     fare,
                     style: TextStyle(
-                      fontSize: 18.sp,
+                      fontSize: (fare == 'Fare not available') ? 12.sp : 18.sp,
                       fontWeight: FontWeight.bold,
-                      color: const Color(0xFF1E4DB7),
+                      color: (fare == 'Fare not available') ? Colors.grey.shade500 : const Color(0xFF1E4DB7),
                     ),
                   ),
                   Text(
@@ -304,6 +304,9 @@ class _AvailableBusesPageState extends State<AvailableBusesPage> {
                       'fare': fare,
                       'duration': duration,
                       'busType': busType,
+                      'intermediate_stops': bus['intermediate_stops'],
+                      'from_id': bus['from_id'],
+                      'to_id': bus['to_id']
                     };
                     context.push('/bus_details', extra: normalizedBus);
                   },

@@ -166,13 +166,23 @@ class _BusDetailsPageState extends State<BusDetailsPage> {
                   SizedBox(height: 16.h),
                   _buildStopRow(
                     widget.bus['departureTime'] ?? '',
-                    'Departure Stop',
+                    widget.bus['from_id']?.toString().toUpperCase() ?? 'Departure Stop',
                     true,
                   ),
-                  _buildStopRow('...', 'Intermediate Stops', false),
+                  if (widget.bus['intermediate_stops'] != null && 
+                      (widget.bus['intermediate_stops'] as List).isNotEmpty)
+                    ...(widget.bus['intermediate_stops'] as List).map((stop) {
+                      return _buildStopRow(
+                        '...',
+                        stop.toString().toUpperCase(),
+                        false,
+                      );
+                    })
+                  else
+                    _buildStopRow('...', 'Intermediate Stops', false),
                   _buildStopRow(
                     widget.bus['arrivalTime'] ?? '',
-                    'Destination Stop',
+                    widget.bus['to_id']?.toString().toUpperCase() ?? 'Destination Stop',
                     true,
                     isLast: true,
                   ),
